@@ -27,8 +27,31 @@ const RAP_KEYWORDS = new Set([
     'mua', 'mu', 'ty', 'tu', 'vet', 'vetja', 'veti', 'gjallë', 'vdekë', 'vdekje', 'gjak', 'gjakut', 'zjarr', 'zjarri', 'akull', 'ftohtë', 'nxehtë', 'lot', 'loti', 'botë', 'bota', 'jetë', 'jeta', 'mbret', 'mbreti', 'shtet', 'shteti', 'besim', 'tradhti', 'dashuri', 'urrejtje', 'shpresë', 'loja', 'lojë', 'fitore', 'humbje', 'sukses', 'ari', 'flori', 'armik', 'mik', 'miku', 'besnik', 'tradhtar', 'fajtor', 'shpirt', 'trup', 'trupi', 'turp', 'turpi', 'nder', 'nderi', 'zot', 'zoti', 'ferr', 'ferri', 'parajsë', 'sy', 'sytë', 'dorë', 'dora', 'krah', 'krahu', 'zemër', 'zemra', 'mendje', 'mendja', 'kokë', 'koka', 'fjalë', 'fjala', 'besë', 'besa', 'shokë', 'shokt', 'muri', 'shkru', 'punu', 'shku', 'lexu', 'kallxu', 'ndertu', 'ndalu', 'provu', 'mbaru', 'maru', 'bo', 'lidh', 'çmend', 'zjarr', 'mall', 'humb', 'fitu', 'shpresu', 'besu', 'shkatrru', 'ndryshu', 'kriju', 'fillu', 'mbaru', 'harru', 'kujtu', 'ndje', 'ndjejm', 'ndjejn', 'urrej', 'dashuroj', 'shkatërroj', 'harroj', 'kujtoj', 'rrejt', 'rren', 'rrena', 'rrenat', 'vashë', 'qikë', 'gocë', 'femër', 'djalë', 'çun', 'pishmon', 'vonë', 'herët', 'vetëm', 'bashkë', 'zonë', 'zona', 'kodra', 'kodër', 'mal', 'mali', 'det', 'deti', 'qiell', 'qielli', 'diell', 'dielli', 'hënë', 'hëna', 'yll', 'yjet', 'retë', 'shi', 'shiu', 'borë', 'bora', 'erë', 'era'
 ]);
 
+// Preset B-Rhymes pairs for the 4-Takt (4-Bar) Template Generator
+const RAP_B_RHYMES = [
+    ['kerr', 'ferr'],
+    ['shpejt', 'drejt'],
+    ['natë', 'datë'],
+    ['hejt', 'beat'],
+    ['sen', 'men'],
+    ['gjak', 'pak'],
+    ['loc', 'shac'],
+    ['famë', 'nënë'],
+    ['shkru', 'punu'],
+    ['kallxu', 'ndalu'],
+    ['lot', 'zot'],
+    ['keq', 'dreq'],
+    ['fort', 'sport'],
+    ['rap', 'trap'],
+    ['vibe', 'jetë'],
+    ['bashkë', 'jashtë'],
+    ['pare', 'llafe'],
+    ['nxehtë', 'lehtë']
+];
+
 let wordlist = [];
 let currentResults = [];
+let selectedBRhymeIndex = 0;
 
 // DOM Elements
 const loadingOverlay = document.getElementById('loading-overlay');
@@ -457,6 +480,7 @@ function triggerSearch() {
         }
         
         currentResults = results;
+        selectedBRhymeIndex = Math.floor(Math.random() * RAP_B_RHYMES.length);
         filterAndRenderResults();
     }, 50);
 }
@@ -594,6 +618,146 @@ function filterAndRenderResults() {
         }
         topGroupEl.appendChild(gridEl);
         resultsContainer.appendChild(topGroupEl);
+    }
+    
+    // 5. Render 4-Takt (AABB) Songwriting Template
+    const activeQuery = searchInput.value.trim();
+    if (activeQuery && filtered.length >= 2) {
+        // Find two distinct rhyme A words (ideally with different stems)
+        let rhymeA1 = filtered[0].word;
+        let rhymeA2 = '';
+        for (let item of filtered) {
+            if (getWordStem(item.word) !== getWordStem(rhymeA1)) {
+                rhymeA2 = item.word;
+                break;
+            }
+        }
+        if (!rhymeA2 && filtered.length > 1) {
+            rhymeA2 = filtered[1].word;
+        }
+        
+        // Select B-Rhymes from preset
+        const bPair = RAP_B_RHYMES[selectedBRhymeIndex % RAP_B_RHYMES.length];
+        const rhymeB1 = bPair[0];
+        const rhymeB2 = bPair[1];
+        
+        const templateGroupEl = document.createElement('div');
+        templateGroupEl.className = 'rhyme-group';
+        templateGroupEl.style.background = 'rgba(0, 85, 255, 0.02)';
+        templateGroupEl.style.border = '1px solid rgba(0, 85, 255, 0.12)';
+        templateGroupEl.style.borderRadius = '12px';
+        templateGroupEl.style.padding = '18px 20px';
+        templateGroupEl.style.marginBottom = '24px';
+        templateGroupEl.style.boxShadow = '0 4px 20px rgba(0, 85, 255, 0.02)';
+        
+        const templateHeaderEl = document.createElement('div');
+        templateHeaderEl.style.display = 'flex';
+        templateHeaderEl.style.justifyContent = 'space-between';
+        templateHeaderEl.style.alignItems = 'center';
+        templateHeaderEl.style.marginBottom = '12px';
+        templateHeaderEl.style.flexWrap = 'wrap';
+        templateHeaderEl.style.gap = '8px';
+        
+        const templateTitleEl = document.createElement('h3');
+        templateTitleEl.className = 'rhyme-group-title';
+        templateTitleEl.style.color = 'var(--primary)';
+        templateTitleEl.style.fontSize = '1.05rem';
+        templateTitleEl.style.margin = '0';
+        templateTitleEl.style.textTransform = 'uppercase';
+        templateTitleEl.style.letterSpacing = '0.5px';
+        templateTitleEl.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Gjeneruesi 4 Takte (Skema AABB)
+        `;
+        templateHeaderEl.appendChild(templateTitleEl);
+        
+        const templateActionsEl = document.createElement('div');
+        templateActionsEl.style.display = 'flex';
+        templateActionsEl.style.gap = '6px';
+        
+        const shuffleBtn = document.createElement('button');
+        shuffleBtn.className = 'btn btn-secondary btn-sm';
+        shuffleBtn.style.fontSize = '0.75rem';
+        shuffleBtn.style.padding = '4px 8px';
+        shuffleBtn.style.height = '28px';
+        shuffleBtn.innerHTML = 'Ndrysho Rimën B 🔄';
+        shuffleBtn.addEventListener('click', () => {
+            selectedBRhymeIndex = (selectedBRhymeIndex + 1) % RAP_B_RHYMES.length;
+            filterAndRenderResults();
+            showToast('Rimë B e re u përzgjodh!');
+        });
+        templateActionsEl.appendChild(shuffleBtn);
+        
+        const sendBtn = document.createElement('button');
+        sendBtn.className = 'btn btn-secondary btn-sm';
+        sendBtn.style.fontSize = '0.75rem';
+        sendBtn.style.padding = '4px 8px';
+        sendBtn.style.height = '28px';
+        sendBtn.style.borderColor = 'rgba(0, 210, 255, 0.3)';
+        sendBtn.style.color = 'var(--primary)';
+        sendBtn.innerHTML = 'Dërgo në Notepad ✍️';
+        sendBtn.addEventListener('click', () => {
+            let currentText = lyricsTextarea.value;
+            if (currentText.trim()) {
+                currentText += '\n\n';
+            }
+            currentText += `____________________ ${rhymeA1}\n`;
+            currentText += `____________________ ${rhymeA2}\n`;
+            currentText += `____________________ ${rhymeB1}\n`;
+            currentText += `____________________ ${rhymeB2}`;
+            
+            lyricsTextarea.value = currentText;
+            updateLyricsStats();
+            saveLyrics();
+            lyricsTextarea.focus();
+            
+            // Scroll textarea to bottom
+            lyricsTextarea.scrollTop = lyricsTextarea.scrollHeight;
+            showToast('Struktura u dërgua te Notepad!');
+        });
+        templateActionsEl.appendChild(sendBtn);
+        
+        templateHeaderEl.appendChild(templateActionsEl);
+        templateGroupEl.appendChild(templateHeaderEl);
+        
+        // Lines display
+        const linesContainer = document.createElement('div');
+        linesContainer.style.display = 'flex';
+        linesContainer.style.flexDirection = 'column';
+        linesContainer.style.gap = '8px';
+        linesContainer.style.background = 'rgba(15, 23, 42, 0.4)';
+        linesContainer.style.padding = '12px';
+        linesContainer.style.borderRadius = '8px';
+        linesContainer.style.border = '1px solid rgba(255, 255, 255, 0.04)';
+        
+        const makeLineRow = (label, word, letter) => {
+            const row = document.createElement('div');
+            row.style.display = 'flex';
+            row.style.justifyContent = 'space-between';
+            row.style.alignItems = 'center';
+            row.style.fontSize = '0.9rem';
+            row.style.color = 'var(--text-muted)';
+            row.style.borderBottom = '1px dashed rgba(255, 255, 255, 0.04)';
+            row.style.paddingBottom = '6px';
+            
+            row.innerHTML = `
+                <span>
+                    <strong style="color: var(--text-dark); margin-right: 6px;">${label} (${letter}):</strong>
+                    <span style="letter-spacing: 2px; color: var(--text-dark); opacity: 0.6;">__________________</span>
+                </span>
+                <span class="word-text" style="color: var(--primary); font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; text-shadow: 0 0 5px rgba(0, 210, 255, 0.2);" title="Kliko për ta kopjuar">${word}</span>
+            `;
+            row.querySelector('.word-text').addEventListener('click', () => copyWord(word));
+            return row;
+        };
+        
+        linesContainer.appendChild(makeLineRow('Takt 1', rhymeA1, 'A'));
+        linesContainer.appendChild(makeLineRow('Takt 2', rhymeA2, 'A'));
+        linesContainer.appendChild(makeLineRow('Takt 3', rhymeB1, 'B'));
+        linesContainer.appendChild(makeLineRow('Takt 4', rhymeB2, 'B'));
+        
+        templateGroupEl.appendChild(linesContainer);
+        resultsContainer.appendChild(templateGroupEl);
     }
     
     // Get sorted keys of groups (e.g. "1 Rrokje", "2 Rrokje", etc.)
