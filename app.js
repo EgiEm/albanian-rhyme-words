@@ -27,77 +27,9 @@ const RAP_KEYWORDS = new Set([
     'mua', 'mu', 'ty', 'tu', 'vet', 'vetja', 'veti', 'gjallë', 'vdekë', 'vdekje', 'gjak', 'gjakut', 'zjarr', 'zjarri', 'akull', 'ftohtë', 'nxehtë', 'lot', 'loti', 'botë', 'bota', 'jetë', 'jeta', 'mbret', 'mbreti', 'shtet', 'shteti', 'besim', 'tradhti', 'dashuri', 'urrejtje', 'shpresë', 'loja', 'lojë', 'fitore', 'humbje', 'sukses', 'ari', 'flori', 'armik', 'mik', 'miku', 'besnik', 'tradhtar', 'fajtor', 'shpirt', 'trup', 'trupi', 'turp', 'turpi', 'nder', 'nderi', 'zot', 'zoti', 'ferr', 'ferri', 'parajsë', 'sy', 'sytë', 'dorë', 'dora', 'krah', 'krahu', 'zemër', 'zemra', 'mendje', 'mendja', 'kokë', 'koka', 'fjalë', 'fjala', 'besë', 'besa', 'shokë', 'shokt', 'muri', 'shkru', 'punu', 'shku', 'lexu', 'kallxu', 'ndertu', 'ndalu', 'provu', 'mbaru', 'maru', 'bo', 'lidh', 'çmend', 'zjarr', 'mall', 'humb', 'fitu', 'shpresu', 'besu', 'shkatrru', 'ndryshu', 'kriju', 'fillu', 'mbaru', 'harru', 'kujtu', 'ndje', 'ndjejm', 'ndjejn', 'urrej', 'dashuroj', 'shkatërroj', 'harroj', 'kujtoj', 'rrejt', 'rren', 'rrena', 'rrenat', 'vashë', 'qikë', 'gocë', 'femër', 'djalë', 'çun', 'pishmon', 'vonë', 'herët', 'vetëm', 'bashkë', 'zonë', 'zona', 'kodra', 'kodër', 'mal', 'mali', 'det', 'deti', 'qiell', 'qielli', 'diell', 'dielli', 'hënë', 'hëna', 'yll', 'yjet', 'retë', 'shi', 'shiu', 'borë', 'bora', 'erë', 'era', 'di', 'gadi'
 ]);
 
-// Preset B-Rhymes pairs for the 4-Takt (4-Bar) Template Generator
-const RAP_B_RHYMES = [
-    ['kerr', 'ferr'],
-    ['shpejt', 'drejt'],
-    ['natë', 'datë'],
-    ['hejt', 'beat'],
-    ['sen', 'men'],
-    ['gjak', 'pak'],
-    ['loc', 'shac'],
-    ['famë', 'nënë'],
-    ['shkru', 'punu'],
-    ['kallxu', 'ndalu'],
-    ['lot', 'zot'],
-    ['keq', 'dreq'],
-    ['fort', 'sport'],
-    ['rap', 'trap'],
-    ['vibe', 'jetë'],
-    ['bashkë', 'jashtë'],
-    ['pare', 'llafe'],
-    ['nxehtë', 'lehtë']
-];
-
-// Preset rap setup line templates
-const RAP_LINE_TEMPLATES = [
-    "Nëpër rrugë eci e kërkoj",
-    "Krejt po m'shohin kur e kalli këtë",
-    "Nuk po dorëzohem për asnjë",
-    "Hustle-in e kam n'gjak e gjej",
-    "Nuk ka shansë me më ndalë ky",
-    "Jam tu e bo këtë lojë me",
-    "E di që shumë shpejt po vjen",
-    "Krejt po çmenden kur e dëgjojnë këtë",
-    "Deri n'fund kam me mbajt këtë",
-    "Vibe-i është i nxehtë kur ndizet",
-    "Dritat po fiken e shfaqet ky",
-    "Në këtë lojë nuk ka rregulla për",
-    "Kam kalu shumë herë nëpër këtë",
-    "Unë jam i pari që e ndjej këtë",
-    "N'studio deri vonë duke krijuar",
-    "Gabimet tona nuk i fshin kjo",
-    "Nuk po m'intereson se çka thotë ky",
-    "Leku po vjen e po shtohet",
-    "Flow-n e kam t'fortë e ndërtoj",
-    "N'mahallë krejt e dinë se kush është",
-    "Jeta shpejt po ecë e nuk pret",
-    "E di mirë çka don me thënë kjo",
-    "Çdo sekondë e çdo dritë po vjen",
-    "Kam kalu shumë sfida e t'kqia n'këtë",
-    "Zëri jem po nihet an e mbanë",
-    "Nëpër natë tu lyp nji tjetër",
-    "Besnikërinë e shoh te ky",
-    "Krejt po dojn me m'pa mu rrëzu te",
-    "Po du me pasë ma shumë se ky",
-    "Çdo ditë e më shumë po ndryshon ky",
-    "Nëpër lagje tonë e dinë kush ka",
-    "Çdo ditë po punoj për me pa",
-    "Nuk ka kurrkush forcë me ndalu këtë",
-    "Krejt e dinë që unë e kam",
-    "Me këtë flow e kallim krejt këtë",
-    "N'mahallë tonë nuk ka vend për",
-    "Prej fillimit e deri n'fund unë e"
-];
-
 let wordlist = [];
 let currentResults = [];
-let selectedBRhymeIndex = 0;
-let currentTemplateIndices = [0, 1, 2, 3];
-let currentThemeIndex = 0;
 
-// Theme names for coherent 4-takt generation
-const THEMES = ['rrugë', 'studio', 'hustle', 'besa', 'dhimbje', 'flex', 'agresion', 'reflektim', 'nate', 'lagje'];
 
 // DOM Elements
 const loadingOverlay = document.getElementById('loading-overlay');
@@ -120,7 +52,7 @@ const wordCountDisplay = document.getElementById('word-count');
 const barCountDisplay = document.getElementById('bar-count');
 const copyLyricsBtn = document.getElementById('copy-lyrics-btn');
 const clearLyricsBtn = document.getElementById('clear-lyrics-btn');
-const structureLyricsBtn = document.getElementById('structure-lyrics-btn');
+// Lyrics Pad Elements
 const saveStatus = document.getElementById('save-status');
 
 // Filter States
@@ -350,34 +282,7 @@ function setupEventListeners() {
         }
     });
 
-    // Structure 4 Takte Button
-    if (structureLyricsBtn) {
-        structureLyricsBtn.addEventListener('click', () => {
-            const text = lyricsTextarea.value;
-            if (!text.trim()) {
-                showToast('Notepadi është i zbrazët!');
-                return;
-            }
-            
-            // Split text into lines, trim them, and filter out empty ones
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if (lines.length === 0) return;
-            
-            // Reconstruct text, inserting blank lines after every 4 lines (bars)
-            const structuredLines = [];
-            for (let i = 0; i < lines.length; i++) {
-                structuredLines.push(lines[i]);
-                if ((i + 1) % 4 === 0 && (i + 1) < lines.length) {
-                    structuredLines.push(''); // add empty line to separate blocks
-                }
-            }
-            
-            lyricsTextarea.value = structuredLines.join('\n');
-            updateLyricsStats();
-            saveLyrics();
-            showToast('U strukturua në blloqe prej 4 taktesh! 🎵');
-        });
-    }
+    // structure-lyrics-btn removed
 }
 
 // Theme-aware dynamic rap line generator
@@ -813,17 +718,6 @@ function triggerSearch() {
         }
         
         currentResults = results;
-        selectedBRhymeIndex = Math.floor(Math.random() * RAP_B_RHYMES.length);
-        
-        // Pick 4 random unique template indices
-        currentTemplateIndices = [];
-        while (currentTemplateIndices.length < 4) {
-            const rand = Math.floor(Math.random() * RAP_LINE_TEMPLATES.length);
-            if (!currentTemplateIndices.includes(rand)) {
-                currentTemplateIndices.push(rand);
-            }
-        }
-        
         filterAndRenderResults();
     }, 50);
 }
@@ -963,234 +857,8 @@ function filterAndRenderResults() {
         resultsContainer.appendChild(topGroupEl);
     }
     
-    // 5. Render 4-Takt (AABB) Songwriting Template
-    const activeQuery = searchInput.value.trim().toLowerCase();
-    if (activeQuery && filtered.length >= 2) {
-        // Sort template candidates to prioritize Top Picks and strong rhymes
-        const templateCandidates = [...filtered];
-        const strengthWeight = { 'perfect': 1, 'good': 2, 'vowel': 3 };
-        
-        templateCandidates.sort((a, b) => {
-            const aIsTop = RAP_KEYWORDS.has(a.word);
-            const bIsTop = RAP_KEYWORDS.has(b.word);
-            if (aIsTop && !bIsTop) return -1;
-            if (!aIsTop && bIsTop) return 1;
-            
-            if (strengthWeight[a.strength] !== strengthWeight[b.strength]) {
-                return strengthWeight[a.strength] - strengthWeight[b.strength];
-            }
-            
-            return a.word.length - b.word.length;
-        });
-        
-        // Pick A-Rhymes: the searched word + best matching rhyme from results
-        let rhymeA1 = activeQuery;
-        let rhymeA2 = '';
-        for (let item of templateCandidates) {
-            if (item.word !== activeQuery && getWordStem(item.word) !== getWordStem(activeQuery)) {
-                rhymeA2 = item.word;
-                break;
-            }
-        }
-        if (!rhymeA2 && templateCandidates.length > 0) {
-            rhymeA2 = templateCandidates[0].word;
-        }
-        
-        // Pick B-Rhymes dynamically:
-        // We pick a random word from RAP_KEYWORDS, search for its rhymes in our database,
-        // and pick two unique rhymes!
-        let rhymeB1 = '';
-        let rhymeB2 = '';
-        
-        // Try to find a dynamic B-rhyme pair
-        let foundDynamicB = false;
-        const rapKeywordsArr = Array.from(RAP_KEYWORDS);
-        
-        // Try up to 30 times to find a keyword with good rhymes
-        for (let attempt = 0; attempt < 30; attempt++) {
-            const randomKeyword = rapKeywordsArr[Math.floor(Math.random() * rapKeywordsArr.length)];
-            const keywordRhymes = [];
-            for (let word of wordlist) {
-                const match = calculateRhyme(word, randomKeyword);
-                if (match && (match.strength === 'perfect' || match.strength === 'good')) {
-                    keywordRhymes.push(match.word);
-                }
-            }
-            
-            // Deduplicate stems to make sure B-rhymes are not just grammatical variations
-            const uniqueBStems = [];
-            const seenBStems = new Set();
-            for (let w of keywordRhymes) {
-                const stem = getWordStem(w);
-                if (!seenBStems.has(stem) && w !== randomKeyword) {
-                    seenBStems.add(stem);
-                    uniqueBStems.push(w);
-                }
-            }
-            
-            if (uniqueBStems.length >= 2) {
-                const shuffledB = uniqueBStems.sort(() => 0.5 - Math.random());
-                rhymeB1 = shuffledB[0];
-                rhymeB2 = shuffledB[1];
-                foundDynamicB = true;
-                break;
-            }
-        }
-        
-        // Fallback to presets if dynamic search failed
-        if (!foundDynamicB) {
-            const bPair = RAP_B_RHYMES[selectedBRhymeIndex % RAP_B_RHYMES.length];
-            rhymeB1 = bPair[0];
-            rhymeB2 = bPair[1];
-        }
-        
-        const templateGroupEl = document.createElement('div');
-        templateGroupEl.className = 'rhyme-group';
-        templateGroupEl.style.background = 'rgba(0, 85, 255, 0.02)';
-        templateGroupEl.style.border = '1px solid rgba(0, 85, 255, 0.12)';
-        templateGroupEl.style.borderRadius = '12px';
-        templateGroupEl.style.padding = '18px 20px';
-        templateGroupEl.style.marginBottom = '24px';
-        templateGroupEl.style.boxShadow = '0 4px 20px rgba(0, 85, 255, 0.02)';
-        
-        const templateHeaderEl = document.createElement('div');
-        templateHeaderEl.style.display = 'flex';
-        templateHeaderEl.style.justifyContent = 'space-between';
-        templateHeaderEl.style.alignItems = 'center';
-        templateHeaderEl.style.marginBottom = '12px';
-        templateHeaderEl.style.flexWrap = 'wrap';
-        templateHeaderEl.style.gap = '8px';
-        
-        const templateTitleEl = document.createElement('h3');
-        templateTitleEl.className = 'rhyme-group-title';
-        templateTitleEl.style.color = 'var(--primary)';
-        templateTitleEl.style.fontSize = '1.05rem';
-        templateTitleEl.style.margin = '0';
-        templateTitleEl.style.textTransform = 'uppercase';
-        templateTitleEl.style.letterSpacing = '0.5px';
-        templateTitleEl.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Gjeneruesi 4 Takte (Skema AABB)
-        `;
-        templateHeaderEl.appendChild(templateTitleEl);
-        
-        const templateActionsEl = document.createElement('div');
-        templateActionsEl.style.display = 'flex';
-        templateActionsEl.style.gap = '6px';
-        
-        const shuffleBtn = document.createElement('button');
-        shuffleBtn.className = 'btn btn-secondary btn-sm';
-        shuffleBtn.style.fontSize = '0.75rem';
-        shuffleBtn.style.padding = '4px 8px';
-        shuffleBtn.style.height = '28px';
-        shuffleBtn.innerHTML = 'Ndrysho B 🔄';
-        shuffleBtn.addEventListener('click', () => {
-            selectedBRhymeIndex = (selectedBRhymeIndex + 1) % RAP_B_RHYMES.length;
-            filterAndRenderResults();
-            showToast('Rimë B e re u përzgjodh!');
-        });
-        templateActionsEl.appendChild(shuffleBtn);
-        
-        const shuffleIdeaBtn = document.createElement('button');
-        shuffleIdeaBtn.className = 'btn btn-secondary btn-sm';
-        shuffleIdeaBtn.style.fontSize = '0.75rem';
-        shuffleIdeaBtn.style.padding = '4px 8px';
-        shuffleIdeaBtn.style.height = '28px';
-        shuffleIdeaBtn.innerHTML = 'Tjetër Ide 🔄';
-        shuffleIdeaBtn.addEventListener('click', () => {
-            currentTemplateIndices = [];
-            while (currentTemplateIndices.length < 4) {
-                const rand = Math.floor(Math.random() * RAP_LINE_TEMPLATES.length);
-                if (!currentTemplateIndices.includes(rand)) {
-                    currentTemplateIndices.push(rand);
-                }
-            }
-            filterAndRenderResults();
-            showToast('Tekstet u ndryshuan me ide të reja!');
-        });
-        templateActionsEl.appendChild(shuffleIdeaBtn);
-        
-        const sendBtn = document.createElement('button');
-        sendBtn.className = 'btn btn-secondary btn-sm';
-        sendBtn.style.fontSize = '0.75rem';
-        sendBtn.style.padding = '4px 8px';
-        sendBtn.style.height = '28px';
-        sendBtn.style.borderColor = 'rgba(0, 210, 255, 0.3)';
-        sendBtn.style.color = 'var(--primary)';
-        sendBtn.innerHTML = 'Dërgo në Notepad ✍️';
-        
-        // Pick a random theme for the 4-Takt block to ensure coherent storytelling
-        const blockTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
-        
-        const line1 = generateRapBar(rhymeA1, currentTemplateIndices[0], blockTheme);
-        const line2 = generateRapBar(rhymeA2, currentTemplateIndices[1], blockTheme);
-        const line3 = generateRapBar(rhymeB1, currentTemplateIndices[2], blockTheme);
-        const line4 = generateRapBar(rhymeB2, currentTemplateIndices[3], blockTheme);
-        
-        sendBtn.addEventListener('click', () => {
-            let currentText = lyricsTextarea.value;
-            if (currentText.trim()) {
-                currentText += '\n\n';
-            }
-            currentText += `${line1.setup} ${line1.word}\n`;
-            currentText += `${line2.setup} ${line2.word}\n`;
-            currentText += `${line3.setup} ${line3.word}\n`;
-            currentText += `${line4.setup} ${line4.word}`;
-            
-            lyricsTextarea.value = currentText;
-            updateLyricsStats();
-            saveLyrics();
-            lyricsTextarea.focus();
-            
-            // Scroll textarea to bottom
-            lyricsTextarea.scrollTop = lyricsTextarea.scrollHeight;
-            showToast('Teksti u dërgua te Notepad!');
-        });
-        templateActionsEl.appendChild(sendBtn);
-        
-        templateHeaderEl.appendChild(templateActionsEl);
-        templateGroupEl.appendChild(templateHeaderEl);
-        
-        // Lines display
-        const linesContainer = document.createElement('div');
-        linesContainer.style.display = 'flex';
-        linesContainer.style.flexDirection = 'column';
-        linesContainer.style.gap = '8px';
-        linesContainer.style.background = 'rgba(15, 23, 42, 0.4)';
-        linesContainer.style.padding = '12px';
-        linesContainer.style.borderRadius = '8px';
-        linesContainer.style.border = '1px solid rgba(255, 255, 255, 0.04)';
-        
-        const makeLineRow = (label, word, letter, templateText) => {
-            const row = document.createElement('div');
-            row.style.display = 'flex';
-            row.style.justifyContent = 'space-between';
-            row.style.alignItems = 'center';
-            row.style.fontSize = '0.9rem';
-            row.style.color = 'var(--text-muted)';
-            row.style.borderBottom = '1px dashed rgba(255, 255, 255, 0.04)';
-            row.style.paddingBottom = '6px';
-            
-            row.innerHTML = `
-                <span style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap; text-align: left; line-height: 1.6;">
-                    <strong style="color: var(--text-dark); margin-right: 4px;">${label} (${letter}):</strong>
-                    <span style="color: var(--text-main); font-style: italic;">
-                        ${templateText} <strong class="word-text highlight-rhyme" style="color: var(--primary); font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; text-shadow: 0 0 8px rgba(0, 210, 255, 0.35); padding: 2px 6px; background: rgba(0, 210, 255, 0.06); border-radius: 4px;" title="Kliko për ta kopjuar">${word}</strong>
-                    </span>
-                </span>
-            `;
-            row.querySelector('.word-text').addEventListener('click', () => copyWord(word));
-            return row;
-        };
-        
-        linesContainer.appendChild(makeLineRow('Takt 1', line1.word, 'A', line1.setup));
-        linesContainer.appendChild(makeLineRow('Takt 2', line2.word, 'A', line2.setup));
-        linesContainer.appendChild(makeLineRow('Takt 3', line3.word, 'B', line3.setup));
-        linesContainer.appendChild(makeLineRow('Takt 4', line4.word, 'B', line4.setup));
-        
-        templateGroupEl.appendChild(linesContainer);
-        resultsContainer.appendChild(templateGroupEl);
-    }
+    // 4-Takt Generator UI Block removed
+
     
     // Get sorted keys of groups (e.g. "1 Rrokje", "2 Rrokje", etc.)
     const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
