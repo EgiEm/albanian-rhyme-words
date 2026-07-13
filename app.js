@@ -376,6 +376,82 @@ function setupEventListeners() {
     }
 }
 
+// Grammar-aware dynamic rap line generator
+function generateRapBar(word, templateIdx) {
+    const w = word.toLowerCase();
+    
+    // 1. Verbs ending in "-u" or "-o" (Gegërisht participles: shkru, punu, shku, kallxo)
+    if ((w.endsWith('u') || w.endsWith('o') || w === 'bo') && w.length >= 2) {
+        const templates = [
+            "Krejt ditën n'studio tu",
+            "Rrugën tonë të suksesit s'kanë me mujt me",
+            "I vetmi n'mahallë që ka mbet tu",
+            "N'këtë lojë të pisët nuk po du me",
+            "Çdo premtim që e kam dhanë unë kam me",
+            "E nisa prej zero e po du me",
+            "Pa u ndalë hiç e tu",
+            "N'studio duke bërtitë e tu",
+            "Gjithçka që nisa vet e kam",
+            "Nëpër rrugë të lagjes tu"
+        ];
+        const setup = templates[templateIdx % templates.length];
+        return { setup: setup, word: word };
+    }
+    
+    // 2. Feminine Nouns ending in "-a" or "-ë" or "-e" (rruga, fama, rima, jetë, pare, kohë)
+    if ((w.endsWith('a') || w.endsWith('ë') || w.endsWith('e')) && w.length >= 2) {
+        const templates = [
+            "Asfalti i nxehtë n'mahallë, kjo është",
+            "Çdo natë n'studio tu bo hite, po m'ndjek",
+            "Nuk ka rregulla n'rap, po luhet",
+            "Krejt çka shkruaj me vlerë po vjen nga",
+            "Mendjen e ftohtë e mbaj, nalt te",
+            "Bota është e jona, s'na kupton kjo",
+            "Mos m'trego mu përralla e mos m'shit",
+            "Gjithmonë besnik n'jetë, s'e hupim këtë",
+            "S'po shoh ma dritë, po na mbulon kjo",
+            "S'ka llafe t'blla-blla, i marrim këto",
+            "Chillin me shokë tu e shiju këtë"
+        ];
+        const setup = templates[templateIdx % templates.length];
+        return { setup: setup, word: word };
+    }
+    
+    // 3. Masculine Nouns ending in "-i" or "-y" or other consonants (kerri, beati, plumb, rap)
+    if ((w.endsWith('i') || w.endsWith('y') || w.endsWith('t') || w.endsWith('k') || w.endsWith('r') || w.endsWith('n') || w.endsWith('m') || w.endsWith('d') || w.endsWith('s') || w.endsWith('p') || w.endsWith('g')) && w.length >= 2) {
+        const templates = [
+            "N'rrugë t'mahallës tu e shkelë i fundit",
+            "Tupanat po rrahin fort, po kalle",
+            "Nëpër rrezik tu ikë, i shpejtë është",
+            "Nuk më kap asnjë fjalë e asnjë",
+            "Krejt çka më mbron në këtë botë është",
+            "S'po shoh ma dëshira, s'më pikë asnjë",
+            "Besa e besë n'mahallë, gjithmonë afër",
+            "Mos u merr me mu e mos e prek këtë",
+            "Chillin n'studio, krejt po e ndjejnë këtë",
+            "Lirikat e mia po mbesin te ky"
+        ];
+        const setup = templates[templateIdx % templates.length];
+        return { setup: setup, word: word };
+    }
+    
+    // 4. Fallback / Adjectives (fort, shpejt, keq, drejt, pak)
+    const templates = [
+        "Nuk po du me u ndalu, po ecim",
+        "Zërin e flow-t tim e dëgjon shumë",
+        "Eci n'rrugë të vërtetë e shkoj gjithmonë",
+        "Sjellja e tyne po duket shumë",
+        "Për me pasë sukses të duhet vetëm",
+        "Leku po vjen e po shtohet shumë",
+        "E bëjmë këtë punë e po e kallem",
+        "S'po m'intereson se çka po ndodh",
+        "E shkelim gazin n'maksimum e shkojmë",
+        "Nuk ka forcë në këtë botë që më bën"
+    ];
+    const setup = templates[templateIdx % templates.length];
+    return { setup: setup, word: word };
+}
+
 // Reset results container to empty state with suggestions
 function resetToEmptyState() {
     resultsContainer.innerHTML = `
@@ -789,20 +865,20 @@ function filterAndRenderResults() {
         sendBtn.style.color = 'var(--primary)';
         sendBtn.innerHTML = 'Dërgo në Notepad ✍️';
         
-        const t1Text = RAP_LINE_TEMPLATES[currentTemplateIndices[0] % RAP_LINE_TEMPLATES.length];
-        const t2Text = RAP_LINE_TEMPLATES[currentTemplateIndices[1] % RAP_LINE_TEMPLATES.length];
-        const t3Text = RAP_LINE_TEMPLATES[currentTemplateIndices[2] % RAP_LINE_TEMPLATES.length];
-        const t4Text = RAP_LINE_TEMPLATES[currentTemplateIndices[3] % RAP_LINE_TEMPLATES.length];
+        const line1 = generateRapBar(rhymeA1, currentTemplateIndices[0]);
+        const line2 = generateRapBar(rhymeA2, currentTemplateIndices[1]);
+        const line3 = generateRapBar(rhymeB1, currentTemplateIndices[2]);
+        const line4 = generateRapBar(rhymeB2, currentTemplateIndices[3]);
         
         sendBtn.addEventListener('click', () => {
             let currentText = lyricsTextarea.value;
             if (currentText.trim()) {
                 currentText += '\n\n';
             }
-            currentText += `${t1Text} ${rhymeA1}\n`;
-            currentText += `${t2Text} ${rhymeA2}\n`;
-            currentText += `${t3Text} ${rhymeB1}\n`;
-            currentText += `${t4Text} ${rhymeB2}`;
+            currentText += `${line1.setup} ${line1.word}\n`;
+            currentText += `${line2.setup} ${line2.word}\n`;
+            currentText += `${line3.setup} ${line3.word}\n`;
+            currentText += `${line4.setup} ${line4.word}`;
             
             lyricsTextarea.value = currentText;
             updateLyricsStats();
@@ -849,10 +925,10 @@ function filterAndRenderResults() {
             return row;
         };
         
-        linesContainer.appendChild(makeLineRow('Takt 1', rhymeA1, 'A', t1Text));
-        linesContainer.appendChild(makeLineRow('Takt 2', rhymeA2, 'A', t2Text));
-        linesContainer.appendChild(makeLineRow('Takt 3', rhymeB1, 'B', t3Text));
-        linesContainer.appendChild(makeLineRow('Takt 4', rhymeB2, 'B', t4Text));
+        linesContainer.appendChild(makeLineRow('Takt 1', line1.word, 'A', line1.setup));
+        linesContainer.appendChild(makeLineRow('Takt 2', line2.word, 'A', line2.setup));
+        linesContainer.appendChild(makeLineRow('Takt 3', line3.word, 'B', line3.setup));
+        linesContainer.appendChild(makeLineRow('Takt 4', line4.word, 'B', line4.setup));
         
         templateGroupEl.appendChild(linesContainer);
         resultsContainer.appendChild(templateGroupEl);
