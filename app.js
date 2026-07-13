@@ -661,7 +661,7 @@ function generateRapBar(word, templateIdx, theme) {
     
     // Clean up template text from trailing placeholders that were meant for "tag" styling
     let cleanSetup = setup.trim();
-    cleanSetup = cleanSetup.replace(/\s+(ky|kjo|këtë|kët|kjo osht|me ky|si ky|jam ky|jam|çdo|veq|me|si|këtë)$/i, "");
+    cleanSetup = cleanSetup.replace(/\s+(me ky|si ky|jam ky|ky|kjo|këtë|kët|kjo osht|jam|veq)$/i, "");
     cleanSetup = cleanSetup.trim().replace(/,$/, "");
     
     return { setup: cleanSetup, word: word };
