@@ -94,6 +94,10 @@ let wordlist = [];
 let currentResults = [];
 let selectedBRhymeIndex = 0;
 let currentTemplateIndices = [0, 1, 2, 3];
+let currentThemeIndex = 0;
+
+// Theme names for coherent 4-takt generation
+const THEMES = ['rrugë', 'studio', 'hustle', 'besa', 'dhimbje', 'flex', 'agresion', 'reflektim', 'nate', 'lagje'];
 
 // DOM Elements
 const loadingOverlay = document.getElementById('loading-overlay');
@@ -376,78 +380,283 @@ function setupEventListeners() {
     }
 }
 
-// Grammar-aware dynamic rap line generator
-function generateRapBar(word, templateIdx) {
+// Theme-aware dynamic rap line generator
+// All lines in a 4-takt share the same theme for coherent storytelling
+// Slangs from: Buta, MC Kresha, Lyrical Son, Lumi B, Shaolin Gang, Ledri, Unikkatil
+function generateRapBar(word, templateIdx, theme) {
     const w = word.toLowerCase();
+    const t = theme || 'rrugë';
     
-    // 1. Verbs ending in "-u" or "-o" (Gegërisht participles: shkru, punu, shku, kallxo)
+    // Theme-indexed template banks per word category
+    // Each theme has templates for: verbs (-u/-o), feminine (-a/-ë/-e), masculine (-i/consonant), fallback
+    
+    const THEMED_TEMPLATES = {
+        'rrugë': {
+            verb: [
+                "N'rrugë t'lagjes jom rrit tu", "Asfaltin e njoh mir, jom msu me",
+                "Nëpër rrugë t'qytetit tu", "Prej vogël n'rrugë jom msu me",
+                "N'rrugë s'kom nejt palidhje, tu", "Rrugën e njoh si shpullën, tu",
+                "Çdo kthesë n'lagje e kom kalu tu", "N'asfallt t'nxehtë jom rrit tu"
+            ],
+            fem: [
+                "Asfalti i nxehtë n'mahallë, kjo osht", "N'rrugë t'lagjes m'ndjek kjo",
+                "Çdo kthesë n'qytet m'ka msu kjo", "Nëpër rrugë t'errta e njoh këtë",
+                "Kjo lagje m'ka rrit, e njoh mir këtë", "N'çdo cep t'mahallës e ndjej këtë",
+                "Rruga m'ka tregu çka osht kjo", "Prej lagjes deri n'kry e njoh këtë"
+            ],
+            masc: [
+                "N'rrugë t'lagjes krejt e njohin ky", "Asfalti i nxehtë, po t'kallxoj ky",
+                "Çdo cep t'mahallës e di mir ky", "N'rrugë t'errta m'ka shpëtu ky",
+                "Kjo lagje m'ka rrit me ky", "Nëpër rrugë t'qytetit, jam ky",
+                "N'asfallt t'nxehtë e njoh çdo", "Rruga m'ka msu me njoft çdo"
+            ],
+            fall: [
+                "N'rrugë t'lagjes ecim gjithmonë", "Asfalti i nxehtë na bën ma",
+                "Çdo kthesë n'qytet na bon ma", "Nëpër rrugë t'errta shkoj",
+                "Kjo lagje na ka rrit shum", "N'çdo cep t'mahallës jam"
+            ]
+        },
+        'studio': {
+            verb: [
+                "Krejt ditën n'studio tu", "Beat-i po rrah fort e unë tu",
+                "Mic-i ndezë e unë filloj me", "N'karrige tu rri e tu",
+                "Prej mëngjesit deri n'natë tu", "N'studio pa pushim, bre, tu",
+                "Krejt shoqnia n'studio tu", "Çdo natë tu djersit e tu"
+            ],
+            fem: [
+                "N'studio tu djersit, po vjen kjo", "Mic-i n'dorë e po e ndjej këtë",
+                "Beat-i po rrah fort, po e ndjej këtë", "Çdo natë n'studio e krijoj këtë",
+                "Muzika po flet, e ndjej këtë", "N'studio e gjej inspirimin n'këtë",
+                "Kur ndizet mic-i e ndjej këtë", "Çdo hit qe e bëj vjen nga kjo"
+            ],
+            masc: [
+                "N'studio kur ndizet mic-i, jam ky", "Beat-i po rrah fort, po kall ky",
+                "Çdo natë n'studio e ndërtoj ky", "Kur regjistoj e ndjej ky",
+                "Mic-i n'dorë, s'ka kush si ky", "N'studio s'ka pushim, jam ky",
+                "Çdo bar qe e hedh osht si ky", "Kur ndizet beat-i flet ky"
+            ],
+            fall: [
+                "N'studio tu djersit e jap gjithmonë", "Beat-i po rrah fort e ndjej shum",
+                "Mic-i ndezë e po e jap shum", "Çdo natë n'studio punoj",
+                "Kur regjistoj e jap gjithmonë", "N'studio e bëj gjithmonë"
+            ]
+        },
+        'hustle': {
+            verb: [
+                "Kur tjerët flejnë unë jom tu", "S'kom kohë me humb, po vazhdoj me",
+                "Prej zero deri lartë kom me", "Çdo ditë ma e fortë po msoj me",
+                "Leku po vjen se po vazhdoj me", "Pa i dhanë llogari askujt tu",
+                "Çdo sekondë e shfrytëzoj me", "Pa kqyr prapa gjithmonë tu"
+            ],
+            fem: [
+                "Prej zero deri lartë, kjo osht", "Leku po shtohet, e di mir këtë",
+                "S'kom pushim deri sa e marr këtë", "Çdo ditë ma afër e ndjej këtë",
+                "Suksesi vjen kur e du këtë", "Pa pushim tu djersit për këtë",
+                "Prej asgjëje deri dikush, kjo osht", "Hustle-i n'gjak, e ndjej këtë"
+            ],
+            masc: [
+                "Prej zero deri lartë, jam ky", "Leku po vjen, e di çdo",
+                "S'kom pushim, s'kom frik, jam ky", "Çdo ditë ma i fort, jam ky",
+                "Hustle-in e kom n'gjak, jam ky", "Pa pushim tu djersit, jam ky",
+                "Krejt e dinë se s'kom frik, jam ky", "Prej asgjëje deri dikush, jam ky"
+            ],
+            fall: [
+                "Prej zero deri lartë, ecim", "Leku po vjen e po shtohet shum",
+                "S'kom pushim, e jap gjithmonë", "Çdo ditë ma e fortë, ecim",
+                "Hustle-in e bëj gjithmonë", "Pa pushim e pa frik, ecim"
+            ]
+        },
+        'besa': {
+            verb: [
+                "Shokëve t'mi s'u kom harru, tu", "Me bes e me nder kom me",
+                "Krejt çka kom premtu kom me", "S'e braktis kurrë besen, kom me",
+                "Kur m'thirrin shokët unë kom me", "Edhe n'hekra kom me ta",
+                "Besën e mbaj gjithmonë, tu", "Pa i tradhtū shokët, tu"
+            ],
+            fem: [
+                "Besa jonë osht ma e fortë se çdo", "S'e tradhtoj kurrë këtë",
+                "Me shokët e mi e ndaj çdo", "Gjithmonë besnik, s'e hup këtë",
+                "Kur rrihem bashkë s'na ndal asnjë", "N'lagje tonë krejt e njohin këtë",
+                "Mos m'trego mu përralla, s'po ha", "Besnikëria osht ma e fortë se kjo"
+            ],
+            masc: [
+                "Besa osht ligji jem, jam ky", "S'e tradhtoj kurrë shokun, jam ky",
+                "Me shoqni e ndaj çdo", "Gjithmonë besnik, s'lëshoj ky",
+                "Kur thirren shokët, jam ky", "N'lagje tonë krejt e njohin ky",
+                "Besen e mbaj deri n'fund, jam ky", "S'ka forcë qe e thyen, jam ky"
+            ],
+            fall: [
+                "Besa osht ligji jem, ecim", "S'e tradhtoj kurrë, jam gjithmonë",
+                "Me shoqni e ndaj gjithmonë", "Besnikëria na bon ma",
+                "Kur thirren shokët shkojmë", "Besen e mbaj gjithmonë"
+            ]
+        },
+        'dhimbje': {
+            verb: [
+                "S'kom pas lehtë por kom dit me", "Prej gabimeve jom msu me",
+                "Edhe kur bie prap ngrihem e filloj me", "N'errësirë e kom gjet rrugën tu",
+                "Kur krejt m'lanë vet jom msu me", "Lotët m'kanë msu me",
+                "Çdo plagë m'ka tregu se duhet me", "Pa i dëgju tjerët, bre, tu"
+            ],
+            fem: [
+                "Zemra s'njeh tjetër përveç", "S'po m'len me flej mendja n'këtë",
+                "Natën e gjatë po e kaloj n'këtë", "Çdo plagë e vjetër m'ka tregu mir",
+                "Nëpër lot e gëzim, kjo osht", "Hija m'ndjek nëpër çdo",
+                "S'kom pas kurrë lehtë n'këtë", "Çdo rreckë m'kujton se çka osht"
+            ],
+            masc: [
+                "Prej errësirës kom dalë, m'ka forcu ky", "Çdo natë pa gjumë m'kujtohet ky",
+                "S'e harroj kurrë se çka m'ka msu ky", "Lotët e mi s'i sheh askush veç ky",
+                "Nëpër stuhi kom kalu, m'ka shpëtu", "Çdo shtëpi ka sekrete, e di mir ky",
+                "Kur bie nata flet vetëm ky", "N'pasqyrë e shoh vetëm ky"
+            ],
+            fall: [
+                "Prej errësirës kom dalë, ecim", "Çdo natë pa gjumë ecim",
+                "S'e harroj kurrë, ecim gjithmonë", "Lotët m'kanë msu shum",
+                "Nëpër stuhi ecim gjithmonë", "Kur bie e ngrihem, gjithmonë ma"
+            ]
+        },
+        'flex': {
+            verb: [
+                "Flokët kurrë s'i kom kreh, tu", "Lodra gjithë o e re, tu",
+                "Xhamat t'zi e muzikë, tu", "Gazin e shkelim n'autostradë tu",
+                "Tu lu tesha tu ble, tu", "Fly s'shkeli n'tokë, tu",
+                "N'darkë tu vozit shpejt tu", "Kqyrum ti mu ksi, tu"
+            ],
+            fem: [
+                "Gazin e shkelim n'autostradë, kjo osht", "N'darkë tu vozit, e ndjej këtë",
+                "Xhamat t'zi e muzikë, e ndjej këtë", "Tu lu tesha tu ble, e di kjo",
+                "Lodra gjithë o e re, po e shoh këtë", "Fly s'shkeli n'tokë, kjo osht",
+                "Flokët kurrë s'i kom kreh, kjo osht", "Kqyrum ti mu ksi, nuk e prek këtë"
+            ],
+            masc: [
+                "Kqyrum ti mu, s'ki pa si ky", "Kqyre dhipin tem, ksi ti s'e nxen ky",
+                "Na dy s'jena t'njejt, e di ky", "Jom ma fresh se krejt, e di çdo",
+                "Tu i njek frangat nëpër çdo", "Alltin e ki pa plumb, e di ky",
+                "Fmi i lagjes jom rrit me ky", "N'lagje tonë krejt e njohin ky"
+            ],
+            fall: [
+                "Kqyrum ti mu ksi, jam", "Na dy s'jena t'njejt, jam",
+                "Jom ma fresh se krejt, jam", "Tu i njek frangat, ecim",
+                "Alltin e ki pa plumb, ecim", "Fly s'shkeli n'tokë, jam"
+            ]
+        },
+        'agresion': {
+            verb: [
+                "Askush s'mundet me m'ndal kur filloj me", "S'po frikësohem e s'po du me",
+                "Bëj çka du pa m'pyt kush, tu", "Krejt e kuptojnë kur filloj me",
+                "E mbaj fjalën gjithmonë, kom me", "Ata s'kanë guxim me",
+                "S'jom si ata qe flasin pa", "Krejt e dinë se s'kom frik me"
+            ],
+            fem: [
+                "Qe shok po t'kallxoj, kjo osht", "N'rrugë t'lagjes s'ka kush ndal këtë",
+                "Hala e njejt kurgjo tre, kjo osht", "Po t'tregoj diçka qe s'e din, kjo osht",
+                "A pe sheh qe s'jena t'njejt, kjo osht", "Krejt jena si nana, na bashkon kjo",
+                "S'ka kush guxon me prek këtë", "Bon dritë n'errsirë, e di kjo"
+            ],
+            masc: [
+                "Po t'kallxoj bre, s'ka ma si ky", "Bon dritë n'errsirë, po t'kallxoj ky",
+                "Askush s'guxon me m'ndal, jam ky", "S'e tradhtoj besen as n'ferr, jam ky",
+                "Krejt e dinë se s'luej, jam ky", "Pa m'pyt e pa m'njoft, jam ky",
+                "N'çdo sfidë dal fitimtar, jam ky", "T'u fol si kampiona, po e pret ky"
+            ],
+            fall: [
+                "Po t'kallxoj bre, e bëj gjithmonë", "Askush s'guxon me m'ndal, ecim",
+                "Bon dritë n'errsirë, ecim", "S'e tradhtoj besen, jam gjithmonë",
+                "Krejt e dinë se s'luej, jam", "Pa m'pyt e pa frik, shkoj"
+            ]
+        },
+        'reflektim': {
+            verb: [
+                "Jeta m'ka tregu se duhet me", "S'e ndërroj rrugën, kom me vazhdoj me",
+                "Prej gabimeve jom msu me", "Edhe kur bie prap ngrihem e filloj me",
+                "Kur krejt m'lanë vet jom msu me", "Çdo problëm e zgjidhi tu",
+                "Çka kom nis kom me", "N'errësirë e kom gjet rrugën tu"
+            ],
+            fem: [
+                "M'ka tregu jeta çka d.m.th. kjo", "Dielli del edhe pas stuhi, kjo osht",
+                "Krejt çka kom jetu m'ka msu kjo", "Prej thellësisë deri n'sipërfaqe, kjo osht",
+                "Çdo mëngjes zgjohem me mendje n'këtë", "Nuk e ndërroj rrugën, e njoh mir këtë",
+                "Krejt po e dëgjojnë, s'ka kush ndal këtë", "Kur mbyll sytë e shoh vetëm këtë"
+            ],
+            masc: [
+                "Kur rritesh n'rrugë e mson çdo", "S'e harroj kurrë se çka m'ka msu ky",
+                "Çdo sekondë t'jetës m'ka forcu ky", "Kur m'thirrin e di se çka osht ky",
+                "S'kom m'u nal deri n'fund, jom ky", "Çdo natë pa gjumë m'kujtohet ky",
+                "Prej asgjëje deri dikush, kjo osht", "N'rrugë e n'studio, gjithmonë jam ky"
+            ],
+            fall: [
+                "Jeta m'ka msu me ec gjithmonë", "Prej gabimeve msoj e bëhem ma",
+                "Kur bie e ngrihem, gjithmonë ma", "N'errësirë e gjej dritën gjithmonë",
+                "Mendja ime punon gjithmonë", "Kur tjerët dyshojnë unë shkoj"
+            ]
+        },
+        'nate': {
+            verb: [
+                "Kur ndizet nata unë jom tu", "N'darkë t'ftohtë jom msu me",
+                "Nëpër natë tu vozit tu", "Çdo natë tu djersit e tu",
+                "Kur bie nata unë filloj me", "Pa flejt deri n'mëngjes tu",
+                "Dritat fiken e unë filloj me", "N'errësirë e kom gjet rrugën tu"
+            ],
+            fem: [
+                "Kur ndizet nata po e ndjej këtë", "N'darkë tu vozit, na shoqëron kjo",
+                "Natën e gjatë po e kaloj n'këtë", "Kur bie nata e ndjej këtë",
+                "Dritat fiken e ndizet kjo", "N'errësirë e gjej dritën n'këtë",
+                "Çdo natë n'rrugë e ndjej këtë", "Kur mbyll sytë e shoh vetëm këtë"
+            ],
+            masc: [
+                "Kur bie nata flet vetëm ky", "N'darkë t'ftohtë e shoh qartë çdo",
+                "Dritat fiken e ndizet ky", "Çdo natë pa gjumë m'kujtohet ky",
+                "Kur ndizet nata e di ky", "N'errësirë e njoh vetëm ky",
+                "Nëpër natë tu vozit, e ndjej ky", "Kur bie nata jam gjithmonë ky"
+            ],
+            fall: [
+                "Kur bie nata ecim gjithmonë", "N'darkë t'ftohtë e ndjej shum",
+                "Dritat fiken e ndizem ma", "Nëpër natë tu vozit e ndjej",
+                "Kur ndizet nata e ndjej shum", "N'errësirë ecim gjithmonë"
+            ]
+        },
+        'lagje': {
+            verb: [
+                "Fmi i lagjes jom rrit tu", "N'mes t'rrugës jom rrit tu",
+                "Kjo lagje m'ka msu me", "N'mahallë t'keqe jom msu me",
+                "Nëpër lagje t'qytetit tu", "Prej vogël n'lagje jom msu me",
+                "N'lagje tonë krejt jemi tu", "Pa kqyr prapa n'lagje tu"
+            ],
+            fem: [
+                "N'lagje tonë krejt e njohin këtë", "N'rrugë s'kom nejt palidhje, kjo osht",
+                "Kjo lagje m'ka rrit, e njoh mir këtë", "N'qytet e n'mahallë, krejt e dinë këtë",
+                "Çdo cep t'lagjes e njoh këtë", "Prej lagjes deri n'majë, e njoh këtë",
+                "N'mahallë tonë s'ka kush ndal këtë", "Kjo lagje osht e jona, kjo osht"
+            ],
+            masc: [
+                "N'lagje tonë krejt e njohin ky", "Fmi i lagjes jom rrit me ky",
+                "N'mahallë tonë s'ka kush si ky", "Çdo cep t'lagjes e njoh ky",
+                "Kjo lagje m'ka rrit me ky", "Prej lagjes deri n'kry, jam ky",
+                "N'mahallë e n'qytet, jam ky", "Kur flet mahalla flet edhe ky"
+            ],
+            fall: [
+                "N'lagje tonë ecim ndryshe", "Fmi i lagjes jom rrit gjithmonë",
+                "N'mahallë ecim gjithmonë", "Kjo lagje na ka bo ma",
+                "Prej lagjes deri n'botë ecim", "N'mahallë e n'qytet jam"
+            ]
+        }
+    };
+    
+    const themeData = THEMED_TEMPLATES[t] || THEMED_TEMPLATES['rrugë'];
+    
+    // Select appropriate template array based on word ending
+    let templates;
     if ((w.endsWith('u') || w.endsWith('o') || w === 'bo') && w.length >= 2) {
-        const templates = [
-            "Krejt ditën n'studio tu",
-            "Rrugën tonë të suksesit s'kanë me mujt me",
-            "I vetmi n'mahallë që ka mbet tu",
-            "N'këtë lojë të pisët nuk po du me",
-            "Çdo premtim që e kam dhanë unë kam me",
-            "E nisa prej zero e po du me",
-            "Pa u ndalë hiç e tu",
-            "N'studio duke bërtitë e tu",
-            "Gjithçka që nisa vet e kam",
-            "Nëpër rrugë të lagjes tu"
-        ];
-        const setup = templates[templateIdx % templates.length];
-        return { setup: setup, word: word };
+        templates = themeData.verb;
+    } else if ((w.endsWith('a') || w.endsWith('ë') || w.endsWith('e')) && w.length >= 2) {
+        templates = themeData.fem;
+    } else if ((w.endsWith('i') || w.endsWith('y') || w.endsWith('t') || w.endsWith('k') || w.endsWith('r') || w.endsWith('n') || w.endsWith('m') || w.endsWith('d') || w.endsWith('s') || w.endsWith('p') || w.endsWith('g')) && w.length >= 2) {
+        templates = themeData.masc;
+    } else {
+        templates = themeData.fall;
     }
     
-    // 2. Feminine Nouns ending in "-a" or "-ë" or "-e" (rruga, fama, rima, jetë, pare, kohë)
-    if ((w.endsWith('a') || w.endsWith('ë') || w.endsWith('e')) && w.length >= 2) {
-        const templates = [
-            "Asfalti i nxehtë n'mahallë, kjo është",
-            "Çdo natë n'studio tu bo hite, po m'ndjek",
-            "Nuk ka rregulla n'rap, po luhet",
-            "Krejt çka shkruaj me vlerë po vjen nga",
-            "Mendjen e ftohtë e mbaj, nalt te",
-            "Bota është e jona, s'na kupton kjo",
-            "Mos m'trego mu përralla e mos m'shit",
-            "Gjithmonë besnik n'jetë, s'e hupim këtë",
-            "S'po shoh ma dritë, po na mbulon kjo",
-            "S'ka llafe t'blla-blla, i marrim këto",
-            "Chillin me shokë tu e shiju këtë"
-        ];
-        const setup = templates[templateIdx % templates.length];
-        return { setup: setup, word: word };
-    }
-    
-    // 3. Masculine Nouns ending in "-i" or "-y" or other consonants (kerri, beati, plumb, rap)
-    if ((w.endsWith('i') || w.endsWith('y') || w.endsWith('t') || w.endsWith('k') || w.endsWith('r') || w.endsWith('n') || w.endsWith('m') || w.endsWith('d') || w.endsWith('s') || w.endsWith('p') || w.endsWith('g')) && w.length >= 2) {
-        const templates = [
-            "N'rrugë t'mahallës tu e shkelë i fundit",
-            "Tupanat po rrahin fort, po kalle",
-            "Nëpër rrezik tu ikë, i shpejtë është",
-            "Nuk më kap asnjë fjalë e asnjë",
-            "Krejt çka më mbron në këtë botë është",
-            "S'po shoh ma dëshira, s'më pikë asnjë",
-            "Besa e besë n'mahallë, gjithmonë afër",
-            "Mos u merr me mu e mos e prek këtë",
-            "Chillin n'studio, krejt po e ndjejnë këtë",
-            "Lirikat e mia po mbesin te ky"
-        ];
-        const setup = templates[templateIdx % templates.length];
-        return { setup: setup, word: word };
-    }
-    
-    // 4. Fallback / Adjectives (fort, shpejt, keq, drejt, pak)
-    const templates = [
-        "Nuk po du me u ndalu, po ecim",
-        "Zërin e flow-t tim e dëgjon shumë",
-        "Eci n'rrugë të vërtetë e shkoj gjithmonë",
-        "Sjellja e tyne po duket shumë",
-        "Për me pasë sukses të duhet vetëm",
-        "Leku po vjen e po shtohet shumë",
-        "E bëjmë këtë punë e po e kallem",
-        "S'po m'intereson se çka po ndodh",
-        "E shkelim gazin n'maksimum e shkojmë",
-        "Nuk ka forcë në këtë botë që më bën"
-    ];
     const setup = templates[templateIdx % templates.length];
     return { setup: setup, word: word };
 }
@@ -749,14 +958,9 @@ function filterAndRenderResults() {
     }
     
     // 5. Render 4-Takt (AABB) Songwriting Template
-    const activeQuery = searchInput.value.trim();
+    const activeQuery = searchInput.value.trim().toLowerCase();
     if (activeQuery && filtered.length >= 2) {
-        // Sort template candidates to prioritize Top Picks and strong rhymes:
-        // 1. Top Picks (words in RAP_KEYWORDS)
-        // 2. Perfect rhymes
-        // 3. Good rhymes
-        // 4. Vowel rhymes (Asonancë)
-        // Within each category, sort by length (shorter first)
+        // Sort template candidates to prioritize Top Picks and strong rhymes
         const templateCandidates = [...filtered];
         const strengthWeight = { 'perfect': 1, 'good': 2, 'vowel': 3 };
         
@@ -773,22 +977,28 @@ function filterAndRenderResults() {
             return a.word.length - b.word.length;
         });
         
-        let rhymeA1 = templateCandidates[0].word;
+        // Pick A-Rhymes: the searched word + best matching rhyme from results
+        let rhymeA1 = activeQuery;
         let rhymeA2 = '';
         for (let item of templateCandidates) {
-            if (getWordStem(item.word) !== getWordStem(rhymeA1)) {
+            if (item.word !== activeQuery && getWordStem(item.word) !== getWordStem(activeQuery)) {
                 rhymeA2 = item.word;
                 break;
             }
         }
-        if (!rhymeA2 && templateCandidates.length > 1) {
-            rhymeA2 = templateCandidates[1].word;
+        if (!rhymeA2 && templateCandidates.length > 0) {
+            rhymeA2 = templateCandidates[0].word;
         }
         
-        // Select B-Rhymes from preset
+        // Pick B-Rhymes: find a DIFFERENT rhyme sound from the results
+        // Look for words that DON'T rhyme with A but rhyme with EACH OTHER
+        let rhymeB1 = '';
+        let rhymeB2 = '';
+        
+        // First try: use preset B-rhymes that are known strong pairs
         const bPair = RAP_B_RHYMES[selectedBRhymeIndex % RAP_B_RHYMES.length];
-        const rhymeB1 = bPair[0];
-        const rhymeB2 = bPair[1];
+        rhymeB1 = bPair[0];
+        rhymeB2 = bPair[1];
         
         const templateGroupEl = document.createElement('div');
         templateGroupEl.className = 'rhyme-group';
