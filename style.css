@@ -214,6 +214,14 @@ body {
     font-weight: 400;
 }
 
+.info-note {
+    font-size: 0.82rem;
+    color: var(--text-dark);
+    margin-top: 6px;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
 /* Search Box */
 .search-box {
     display: flex;
