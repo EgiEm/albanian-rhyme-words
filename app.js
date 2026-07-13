@@ -74,11 +74,11 @@ function loadLyricsPad() {
 
 function updateLyricsStats() {
     const text = lyricsTextarea.value;
-    charCountDisplay.textContent = `${text.length} shkronja`;
+    if (charCountDisplay) charCountDisplay.textContent = `${text.length} shkronja`;
     
     // Count words (filter empty strings)
     const words = text.trim().split(/\s+/).filter(w => w.length > 0);
-    wordCountDisplay.textContent = `${words.length} fjalë`;
+    if (wordCountDisplay) wordCountDisplay.textContent = `${words.length} fjalë`;
     
     // Count non-empty lines as "takte" (bars)
     const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
@@ -90,7 +90,9 @@ function updateLyricsStats() {
     if (remaining > 0) {
         barText = `${barCount} takte (${blocksCount} blloqe, +${remaining} rr.)`;
     }
-    barCountDisplay.textContent = barText;
+    if (barCountDisplay) {
+        barCountDisplay.textContent = barText;
+    }
 }
 
 // Save Lyrics Pad to localStorage
@@ -280,31 +282,33 @@ function setupEventListeners() {
     });
 
     // Structure 4 Takte Button
-    structureLyricsBtn.addEventListener('click', () => {
-        const text = lyricsTextarea.value;
-        if (!text.trim()) {
-            showToast('Notepadi është i zbrazët!');
-            return;
-        }
-        
-        // Split text into lines, trim them, and filter out empty ones
-        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-        if (lines.length === 0) return;
-        
-        // Reconstruct text, inserting blank lines after every 4 lines (bars)
-        const structuredLines = [];
-        for (let i = 0; i < lines.length; i++) {
-            structuredLines.push(lines[i]);
-            if ((i + 1) % 4 === 0 && (i + 1) < lines.length) {
-                structuredLines.push(''); // add empty line to separate blocks
+    if (structureLyricsBtn) {
+        structureLyricsBtn.addEventListener('click', () => {
+            const text = lyricsTextarea.value;
+            if (!text.trim()) {
+                showToast('Notepadi është i zbrazët!');
+                return;
             }
-        }
-        
-        lyricsTextarea.value = structuredLines.join('\n');
-        updateLyricsStats();
-        saveLyrics();
-        showToast('U strukturua në blloqe prej 4 taktesh! 🎵');
-    });
+            
+            // Split text into lines, trim them, and filter out empty ones
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) return;
+            
+            // Reconstruct text, inserting blank lines after every 4 lines (bars)
+            const structuredLines = [];
+            for (let i = 0; i < lines.length; i++) {
+                structuredLines.push(lines[i]);
+                if ((i + 1) % 4 === 0 && (i + 1) < lines.length) {
+                    structuredLines.push(''); // add empty line to separate blocks
+                }
+            }
+            
+            lyricsTextarea.value = structuredLines.join('\n');
+            updateLyricsStats();
+            saveLyrics();
+            showToast('U strukturua në blloqe prej 4 taktesh! 🎵');
+        });
+    }
 }
 
 // Reset results container to empty state with suggestions
