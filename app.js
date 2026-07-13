@@ -49,9 +49,51 @@ const RAP_B_RHYMES = [
     ['nxehtë', 'lehtë']
 ];
 
+// Preset rap setup line templates
+const RAP_LINE_TEMPLATES = [
+    "Nëpër rrugë eci e kërkoj",
+    "Krejt po m'shohin kur e kalli këtë",
+    "Nuk po dorëzohem për asnjë",
+    "Hustle-in e kam n'gjak e gjej",
+    "Nuk ka shansë me më ndalë ky",
+    "Jam tu e bo këtë lojë me",
+    "E di që shumë shpejt po vjen",
+    "Krejt po çmenden kur e dëgjojnë këtë",
+    "Deri n'fund kam me mbajt këtë",
+    "Vibe-i është i nxehtë kur ndizet",
+    "Dritat po fiken e shfaqet ky",
+    "Në këtë lojë nuk ka rregulla për",
+    "Kam kalu shumë herë nëpër këtë",
+    "Unë jam i pari që e ndjej këtë",
+    "N'studio deri vonë duke krijuar",
+    "Gabimet tona nuk i fshin kjo",
+    "Nuk po m'intereson se çka thotë ky",
+    "Leku po vjen e po shtohet",
+    "Flow-n e kam t'fortë e ndërtoj",
+    "N'mahallë krejt e dinë se kush është",
+    "Jeta shpejt po ecë e nuk pret",
+    "E di mirë çka don me thënë kjo",
+    "Çdo sekondë e çdo dritë po vjen",
+    "Kam kalu shumë sfida e t'kqia n'këtë",
+    "Zëri jem po nihet an e mbanë",
+    "Nëpër natë tu lyp nji tjetër",
+    "Besnikërinë e shoh te ky",
+    "Krejt po dojn me m'pa mu rrëzu te",
+    "Po du me pasë ma shumë se ky",
+    "Çdo ditë e më shumë po ndryshon ky",
+    "Nëpër lagje tonë e dinë kush ka",
+    "Çdo ditë po punoj për me pa",
+    "Nuk ka kurrkush forcë me ndalu këtë",
+    "Krejt e dinë që unë e kam",
+    "Me këtë flow e kallim krejt këtë",
+    "N'mahallë tonë nuk ka vend për",
+    "Prej fillimit e deri n'fund unë e"
+];
+
 let wordlist = [];
 let currentResults = [];
 let selectedBRhymeIndex = 0;
+let currentTemplateIndices = [0, 1, 2, 3];
 
 // DOM Elements
 const loadingOverlay = document.getElementById('loading-overlay');
@@ -481,6 +523,16 @@ function triggerSearch() {
         
         currentResults = results;
         selectedBRhymeIndex = Math.floor(Math.random() * RAP_B_RHYMES.length);
+        
+        // Pick 4 random unique template indices
+        currentTemplateIndices = [];
+        while (currentTemplateIndices.length < 4) {
+            const rand = Math.floor(Math.random() * RAP_LINE_TEMPLATES.length);
+            if (!currentTemplateIndices.includes(rand)) {
+                currentTemplateIndices.push(rand);
+            }
+        }
+        
         filterAndRenderResults();
     }, 50);
 }
@@ -701,13 +753,32 @@ function filterAndRenderResults() {
         shuffleBtn.style.fontSize = '0.75rem';
         shuffleBtn.style.padding = '4px 8px';
         shuffleBtn.style.height = '28px';
-        shuffleBtn.innerHTML = 'Ndrysho Rimën B 🔄';
+        shuffleBtn.innerHTML = 'Ndrysho B 🔄';
         shuffleBtn.addEventListener('click', () => {
             selectedBRhymeIndex = (selectedBRhymeIndex + 1) % RAP_B_RHYMES.length;
             filterAndRenderResults();
             showToast('Rimë B e re u përzgjodh!');
         });
         templateActionsEl.appendChild(shuffleBtn);
+        
+        const shuffleIdeaBtn = document.createElement('button');
+        shuffleIdeaBtn.className = 'btn btn-secondary btn-sm';
+        shuffleIdeaBtn.style.fontSize = '0.75rem';
+        shuffleIdeaBtn.style.padding = '4px 8px';
+        shuffleIdeaBtn.style.height = '28px';
+        shuffleIdeaBtn.innerHTML = 'Tjetër Ide 🔄';
+        shuffleIdeaBtn.addEventListener('click', () => {
+            currentTemplateIndices = [];
+            while (currentTemplateIndices.length < 4) {
+                const rand = Math.floor(Math.random() * RAP_LINE_TEMPLATES.length);
+                if (!currentTemplateIndices.includes(rand)) {
+                    currentTemplateIndices.push(rand);
+                }
+            }
+            filterAndRenderResults();
+            showToast('Tekstet u ndryshuan me ide të reja!');
+        });
+        templateActionsEl.appendChild(shuffleIdeaBtn);
         
         const sendBtn = document.createElement('button');
         sendBtn.className = 'btn btn-secondary btn-sm';
@@ -717,15 +788,21 @@ function filterAndRenderResults() {
         sendBtn.style.borderColor = 'rgba(0, 210, 255, 0.3)';
         sendBtn.style.color = 'var(--primary)';
         sendBtn.innerHTML = 'Dërgo në Notepad ✍️';
+        
+        const t1Text = RAP_LINE_TEMPLATES[currentTemplateIndices[0] % RAP_LINE_TEMPLATES.length];
+        const t2Text = RAP_LINE_TEMPLATES[currentTemplateIndices[1] % RAP_LINE_TEMPLATES.length];
+        const t3Text = RAP_LINE_TEMPLATES[currentTemplateIndices[2] % RAP_LINE_TEMPLATES.length];
+        const t4Text = RAP_LINE_TEMPLATES[currentTemplateIndices[3] % RAP_LINE_TEMPLATES.length];
+        
         sendBtn.addEventListener('click', () => {
             let currentText = lyricsTextarea.value;
             if (currentText.trim()) {
                 currentText += '\n\n';
             }
-            currentText += `____________________ ${rhymeA1}\n`;
-            currentText += `____________________ ${rhymeA2}\n`;
-            currentText += `____________________ ${rhymeB1}\n`;
-            currentText += `____________________ ${rhymeB2}`;
+            currentText += `${t1Text} ${rhymeA1}\n`;
+            currentText += `${t2Text} ${rhymeA2}\n`;
+            currentText += `${t3Text} ${rhymeB1}\n`;
+            currentText += `${t4Text} ${rhymeB2}`;
             
             lyricsTextarea.value = currentText;
             updateLyricsStats();
@@ -734,7 +811,7 @@ function filterAndRenderResults() {
             
             // Scroll textarea to bottom
             lyricsTextarea.scrollTop = lyricsTextarea.scrollHeight;
-            showToast('Struktura u dërgua te Notepad!');
+            showToast('Teksti u dërgua te Notepad!');
         });
         templateActionsEl.appendChild(sendBtn);
         
@@ -751,7 +828,7 @@ function filterAndRenderResults() {
         linesContainer.style.borderRadius = '8px';
         linesContainer.style.border = '1px solid rgba(255, 255, 255, 0.04)';
         
-        const makeLineRow = (label, word, letter) => {
+        const makeLineRow = (label, word, letter, templateText) => {
             const row = document.createElement('div');
             row.style.display = 'flex';
             row.style.justifyContent = 'space-between';
@@ -762,20 +839,20 @@ function filterAndRenderResults() {
             row.style.paddingBottom = '6px';
             
             row.innerHTML = `
-                <span>
-                    <strong style="color: var(--text-dark); margin-right: 6px;">${label} (${letter}):</strong>
-                    <span style="letter-spacing: 2px; color: var(--text-dark); opacity: 0.6;">__________________</span>
+                <span style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap; text-align: left;">
+                    <strong style="color: var(--text-dark); margin-right: 4px;">${label} (${letter}):</strong>
+                    <span style="color: var(--text-main); font-style: italic;">${templateText}</span>
                 </span>
-                <span class="word-text" style="color: var(--primary); font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; text-shadow: 0 0 5px rgba(0, 210, 255, 0.2);" title="Kliko për ta kopjuar">${word}</span>
+                <span class="word-text" style="color: var(--primary); font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; text-shadow: 0 0 5px rgba(0, 210, 255, 0.2); margin-left: 10px;" title="Kliko për ta kopjuar">${word}</span>
             `;
             row.querySelector('.word-text').addEventListener('click', () => copyWord(word));
             return row;
         };
         
-        linesContainer.appendChild(makeLineRow('Takt 1', rhymeA1, 'A'));
-        linesContainer.appendChild(makeLineRow('Takt 2', rhymeA2, 'A'));
-        linesContainer.appendChild(makeLineRow('Takt 3', rhymeB1, 'B'));
-        linesContainer.appendChild(makeLineRow('Takt 4', rhymeB2, 'B'));
+        linesContainer.appendChild(makeLineRow('Takt 1', rhymeA1, 'A', t1Text));
+        linesContainer.appendChild(makeLineRow('Takt 2', rhymeA2, 'A', t2Text));
+        linesContainer.appendChild(makeLineRow('Takt 3', rhymeB1, 'B', t3Text));
+        linesContainer.appendChild(makeLineRow('Takt 4', rhymeB2, 'B', t4Text));
         
         templateGroupEl.appendChild(linesContainer);
         resultsContainer.appendChild(templateGroupEl);
