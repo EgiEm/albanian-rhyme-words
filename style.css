@@ -367,6 +367,28 @@ body {
     box-shadow: var(--glow-primary);
 }
 
+/* Recommended Chip Styles */
+.chip.chip-recommended {
+    border-color: rgba(255, 170, 0, 0.35);
+    color: #ffb833;
+    background: rgba(255, 170, 0, 0.04);
+}
+
+.chip.chip-recommended:hover {
+    border-color: rgba(255, 170, 0, 0.6);
+    background: rgba(255, 170, 0, 0.08);
+    color: #ffd480;
+}
+
+.chip.chip-recommended.active {
+    background: linear-gradient(135deg, #ffaa00 0%, #ff7700 100%) !important;
+    color: #000 !important;
+    font-weight: 600;
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.45) !important;
+    border-color: transparent !important;
+}
+
+
 /* Results Metadata */
 .results-meta {
     display: flex;
