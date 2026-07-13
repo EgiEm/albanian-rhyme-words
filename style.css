@@ -710,4 +710,164 @@ textarea::placeholder {
     color: #ffaa00;
 }
 
+/* Mobile Responsiveness & Layout Fixes */
+@media (max-width: 768px) {
+    body {
+        align-items: flex-start;
+        padding: 10px 0;
+        overflow-x: hidden;
+    }
+    
+    .app-container {
+        padding: 8px;
+        min-height: auto;
+    }
+    
+    .card {
+        padding: 20px 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    
+    .gradient-text {
+        font-size: 1.85rem;
+        letter-spacing: -0.5px;
+    }
+    
+    .subtitle {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+    
+    .app-header {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .search-box {
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+    
+    .search-box input {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 0.95rem;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        height: 48px;
+    }
+    
+    .search-suggestions {
+        margin-top: 6px;
+        margin-bottom: 12px;
+        gap: 6px;
+    }
+    
+    .suggestion-btn {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .filters-container {
+        padding-top: 15px;
+        margin-bottom: 20px;
+        gap: 12px;
+    }
+    
+    .chip-group {
+        gap: 6px;
+    }
+    
+    .chip {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+    
+    .results-meta {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+        padding-top: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .results-meta h2 {
+        font-size: 1.1rem;
+    }
+    
+    .top-picks-group {
+        padding: 15px 12px;
+        margin-bottom: 16px;
+    }
+    
+    .top-picks-title {
+        font-size: 1.05rem !important;
+        margin-bottom: 10px;
+    }
+    
+    .rhyme-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 8px;
+    }
+    
+    .word-pill {
+        padding: 8px 10px;
+        border-radius: 6px;
+    }
+    
+    .word-text {
+        font-size: 0.85rem;
+    }
+    
+    .word-syllables {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+    }
+    
+    .results-container {
+        max-height: 400px;
+    }
+    
+    .lyrics-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+    }
+    
+    .lyrics-title-group h2 {
+        font-size: 1.25rem;
+    }
+    
+    .lyrics-actions {
+        width: 100%;
+        gap: 6px;
+    }
+    
+    .lyrics-actions .btn {
+        flex: 1;
+        height: 36px;
+        padding: 0;
+        font-size: 0.8rem;
+    }
+    
+    textarea {
+        min-height: 250px;
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    .lyrics-footer {
+        font-size: 0.75rem;
+    }
+}
+
+
 
