@@ -38,7 +38,7 @@ cleaned_words = []
 seen = set()
 
 for word in words:
-    w = word.strip().lower()
+    w = word.strip().lower().replace('ë', 'e').replace('ç', 'c')
     if not w:
         continue
     
@@ -78,7 +78,7 @@ for word in words:
         continue
         
     seen.add(w)
-    cleaned_words.append(word)
+    cleaned_words.append(w)
 
 # Sort words alphabetically
 cleaned_words.sort()
