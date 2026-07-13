@@ -713,82 +713,15 @@ function triggerSearch() {
     
     // Run search on next frame to keep UI responsive
     setTimeout(() => {
-        const parts = query.split(/\s+/).filter(p => p.length > 0);
-        
-        if (parts.length >= 2) {
-            // Find rhymes for each individual word
-            const wordMatches = [];
-            for (let i = 0; i < parts.length; i++) {
-                const w = parts[i];
-                const list = [];
-                for (let word of wordlist) {
-                    const match = calculateRhyme(word, w);
-                    if (match) {
-                        list.push(match);
-                    }
-                }
-                
-                // Prioritize top picks and strength
-                const strengthWeight = { 'perfect': 1, 'good': 2, 'vowel': 3 };
-                list.sort((a, b) => {
-                    const aIsTop = RAP_KEYWORDS.has(a.word);
-                    const bIsTop = RAP_KEYWORDS.has(b.word);
-                    if (aIsTop && !bIsTop) return -1;
-                    if (!aIsTop && bIsTop) return 1;
-                    return strengthWeight[a.strength] - strengthWeight[b.strength];
-                });
-                
-                wordMatches.push(list.slice(0, 15)); // Keep top 15 matches for each word to keep combination counts sensible
+        const results = [];
+        for (let word of wordlist) {
+            const match = calculateRhyme(word, query);
+            if (match) {
+                results.push(match);
             }
-            
-            // Check if any word has zero matches
-            const hasEmptyList = wordMatches.some(list => list.length === 0);
-            if (hasEmptyList) {
-                currentResults = [];
-            } else {
-                // Generate combinations recursively
-                let combinations = [[]];
-                for (let i = 0; i < wordMatches.length; i++) {
-                    const nextComb = [];
-                    for (let c of combinations) {
-                        for (let match of wordMatches[i]) {
-                            nextComb.push([...c, match]);
-                        }
-                    }
-                    combinations = nextComb;
-                }
-                
-                // Map combinations to final result objects
-                const doubleResults = combinations.map(comb => {
-                    const phrase = comb.map(m => m.word).join(' ');
-                    const perfects = comb.filter(m => m.strength === 'perfect').length;
-                    let strength = 'vowel';
-                    if (perfects === comb.length) strength = 'perfect';
-                    else if (perfects > 0 || comb.filter(m => m.strength === 'good').length > 0) strength = 'good';
-                    
-                    const totalSyllables = comb.reduce((acc, m) => acc + m.syllables, 0);
-                    
-                    return {
-                        word: phrase,
-                        strength: strength,
-                        syllables: totalSyllables
-                    };
-                });
-                
-                currentResults = doubleResults;
-            }
-        } else {
-            // Single word search
-            const results = [];
-            for (let word of wordlist) {
-                const match = calculateRhyme(word, query);
-                if (match) {
-                    results.push(match);
-                }
-            }
-            currentResults = results;
         }
         
+        currentResults = results;
         filterAndRenderResults();
     }, 50);
 }
