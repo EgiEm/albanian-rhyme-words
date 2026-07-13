@@ -632,16 +632,20 @@ function getLastVowels(word, count = 2) {
 
 // Determine if and how a word rhymes with the target
 function calculateRhyme(word, target) {
-    if (word === target) return null;
+    // Normalize both words to handle diacritics (ë -> e, ç -> c) during rhyme checks
+    const normWord = word.toLowerCase().replace(/ë/g, 'e').replace(/ç/g, 'c');
+    const normTarget = target.toLowerCase().replace(/ë/g, 'e').replace(/ç/g, 'c');
     
-    const wordLen = word.length;
-    const targetLen = target.length;
+    if (normWord === normTarget) return null;
+    
+    const wordLen = normWord.length;
+    const targetLen = normTarget.length;
     
     // Check Perfect Rhymes (share last 3+ characters, or last 2 for short words)
     const perfectLen = targetLen >= 4 ? 3 : 2;
     if (wordLen >= perfectLen && targetLen >= perfectLen) {
-        const targetEnd = target.substring(targetLen - perfectLen);
-        const wordEnd = word.substring(wordLen - perfectLen);
+        const targetEnd = normTarget.substring(targetLen - perfectLen);
+        const wordEnd = normWord.substring(wordLen - perfectLen);
         if (targetEnd === wordEnd) {
             return {
                 word: word,
@@ -653,8 +657,8 @@ function calculateRhyme(word, target) {
     
     // Check Good Rhymes (share last 2 characters)
     if (wordLen >= 2 && targetLen >= 2) {
-        const targetEnd = target.substring(targetLen - 2);
-        const wordEnd = word.substring(wordLen - 2);
+        const targetEnd = normTarget.substring(targetLen - 2);
+        const wordEnd = normWord.substring(wordLen - 2);
         if (targetEnd === wordEnd) {
             return {
                 word: word,
@@ -665,9 +669,9 @@ function calculateRhyme(word, target) {
     }
     
     // Check Vowel Rhymes / Asonancë (share last 2 vowels)
-    const targetVowels = getLastVowels(target, 2);
+    const targetVowels = getLastVowels(normTarget, 2);
     if (targetVowels.length === 2) {
-        const wordVowels = getLastVowels(word, 2);
+        const wordVowels = getLastVowels(normWord, 2);
         if (targetVowels === wordVowels) {
             return {
                 word: word,
