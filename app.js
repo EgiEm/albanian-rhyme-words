@@ -658,7 +658,13 @@ function generateRapBar(word, templateIdx, theme) {
     }
     
     const setup = templates[templateIdx % templates.length];
-    return { setup: setup, word: word };
+    
+    // Clean up template text from trailing placeholders that were meant for "tag" styling
+    let cleanSetup = setup.trim();
+    cleanSetup = cleanSetup.replace(/\s+(ky|kjo|këtë|kët|kjo osht|me ky|si ky|jam ky|jam|çdo|veq|me|si|këtë)$/i, "");
+    cleanSetup = cleanSetup.trim().replace(/,$/, "");
+    
+    return { setup: cleanSetup, word: word };
 }
 
 // Reset results container to empty state with suggestions
@@ -990,15 +996,53 @@ function filterAndRenderResults() {
             rhymeA2 = templateCandidates[0].word;
         }
         
-        // Pick B-Rhymes: find a DIFFERENT rhyme sound from the results
-        // Look for words that DON'T rhyme with A but rhyme with EACH OTHER
+        // Pick B-Rhymes dynamically:
+        // We pick a random word from RAP_KEYWORDS, search for its rhymes in our database,
+        // and pick two unique rhymes!
         let rhymeB1 = '';
         let rhymeB2 = '';
         
-        // First try: use preset B-rhymes that are known strong pairs
-        const bPair = RAP_B_RHYMES[selectedBRhymeIndex % RAP_B_RHYMES.length];
-        rhymeB1 = bPair[0];
-        rhymeB2 = bPair[1];
+        // Try to find a dynamic B-rhyme pair
+        let foundDynamicB = false;
+        const rapKeywordsArr = Array.from(RAP_KEYWORDS);
+        
+        // Try up to 30 times to find a keyword with good rhymes
+        for (let attempt = 0; attempt < 30; attempt++) {
+            const randomKeyword = rapKeywordsArr[Math.floor(Math.random() * rapKeywordsArr.length)];
+            const keywordRhymes = [];
+            for (let word of wordlist) {
+                const match = calculateRhyme(word, randomKeyword);
+                if (match && (match.strength === 'perfect' || match.strength === 'good')) {
+                    keywordRhymes.push(match.word);
+                }
+            }
+            
+            // Deduplicate stems to make sure B-rhymes are not just grammatical variations
+            const uniqueBStems = [];
+            const seenBStems = new Set();
+            for (let w of keywordRhymes) {
+                const stem = getWordStem(w);
+                if (!seenBStems.has(stem) && w !== randomKeyword) {
+                    seenBStems.add(stem);
+                    uniqueBStems.push(w);
+                }
+            }
+            
+            if (uniqueBStems.length >= 2) {
+                const shuffledB = uniqueBStems.sort(() => 0.5 - Math.random());
+                rhymeB1 = shuffledB[0];
+                rhymeB2 = shuffledB[1];
+                foundDynamicB = true;
+                break;
+            }
+        }
+        
+        // Fallback to presets if dynamic search failed
+        if (!foundDynamicB) {
+            const bPair = RAP_B_RHYMES[selectedBRhymeIndex % RAP_B_RHYMES.length];
+            rhymeB1 = bPair[0];
+            rhymeB2 = bPair[1];
+        }
         
         const templateGroupEl = document.createElement('div');
         templateGroupEl.className = 'rhyme-group';
@@ -1075,10 +1119,13 @@ function filterAndRenderResults() {
         sendBtn.style.color = 'var(--primary)';
         sendBtn.innerHTML = 'Dërgo në Notepad ✍️';
         
-        const line1 = generateRapBar(rhymeA1, currentTemplateIndices[0]);
-        const line2 = generateRapBar(rhymeA2, currentTemplateIndices[1]);
-        const line3 = generateRapBar(rhymeB1, currentTemplateIndices[2]);
-        const line4 = generateRapBar(rhymeB2, currentTemplateIndices[3]);
+        // Pick a random theme for the 4-Takt block to ensure coherent storytelling
+        const blockTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
+        
+        const line1 = generateRapBar(rhymeA1, currentTemplateIndices[0], blockTheme);
+        const line2 = generateRapBar(rhymeA2, currentTemplateIndices[1], blockTheme);
+        const line3 = generateRapBar(rhymeB1, currentTemplateIndices[2], blockTheme);
+        const line4 = generateRapBar(rhymeB2, currentTemplateIndices[3], blockTheme);
         
         sendBtn.addEventListener('click', () => {
             let currentText = lyricsTextarea.value;
@@ -1125,11 +1172,12 @@ function filterAndRenderResults() {
             row.style.paddingBottom = '6px';
             
             row.innerHTML = `
-                <span style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap; text-align: left;">
+                <span style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap; text-align: left; line-height: 1.6;">
                     <strong style="color: var(--text-dark); margin-right: 4px;">${label} (${letter}):</strong>
-                    <span style="color: var(--text-main); font-style: italic;">${templateText}</span>
+                    <span style="color: var(--text-main); font-style: italic;">
+                        ${templateText} <strong class="word-text highlight-rhyme" style="color: var(--primary); font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; text-shadow: 0 0 8px rgba(0, 210, 255, 0.35); padding: 2px 6px; background: rgba(0, 210, 255, 0.06); border-radius: 4px;" title="Kliko për ta kopjuar">${word}</strong>
+                    </span>
                 </span>
-                <span class="word-text" style="color: var(--primary); font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; text-shadow: 0 0 5px rgba(0, 210, 255, 0.2); margin-left: 10px;" title="Kliko për ta kopjuar">${word}</span>
             `;
             row.querySelector('.word-text').addEventListener('click', () => copyWord(word));
             return row;
