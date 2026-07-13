@@ -48,8 +48,10 @@ const toast = document.getElementById('toast');
 const lyricsTextarea = document.getElementById('lyrics-textarea');
 const charCountDisplay = document.getElementById('char-count');
 const wordCountDisplay = document.getElementById('word-count');
+const barCountDisplay = document.getElementById('bar-count');
 const copyLyricsBtn = document.getElementById('copy-lyrics-btn');
 const clearLyricsBtn = document.getElementById('clear-lyrics-btn');
+const structureLyricsBtn = document.getElementById('structure-lyrics-btn');
 const saveStatus = document.getElementById('save-status');
 
 // Filter States
@@ -77,6 +79,18 @@ function updateLyricsStats() {
     // Count words (filter empty strings)
     const words = text.trim().split(/\s+/).filter(w => w.length > 0);
     wordCountDisplay.textContent = `${words.length} fjalë`;
+    
+    // Count non-empty lines as "takte" (bars)
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    const barCount = lines.length;
+    const blocksCount = Math.floor(barCount / 4);
+    const remaining = barCount % 4;
+    
+    let barText = `${barCount} takte (${blocksCount} blloqe)`;
+    if (remaining > 0) {
+        barText = `${barCount} takte (${blocksCount} blloqe, +${remaining} rr.)`;
+    }
+    barCountDisplay.textContent = barText;
 }
 
 // Save Lyrics Pad to localStorage
@@ -263,6 +277,33 @@ function setupEventListeners() {
             saveLyrics();
             showToast('Teksti u fshi!');
         }
+    });
+
+    // Structure 4 Takte Button
+    structureLyricsBtn.addEventListener('click', () => {
+        const text = lyricsTextarea.value;
+        if (!text.trim()) {
+            showToast('Notepadi është i zbrazët!');
+            return;
+        }
+        
+        // Split text into lines, trim them, and filter out empty ones
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        if (lines.length === 0) return;
+        
+        // Reconstruct text, inserting blank lines after every 4 lines (bars)
+        const structuredLines = [];
+        for (let i = 0; i < lines.length; i++) {
+            structuredLines.push(lines[i]);
+            if ((i + 1) % 4 === 0 && (i + 1) < lines.length) {
+                structuredLines.push(''); // add empty line to separate blocks
+            }
+        }
+        
+        lyricsTextarea.value = structuredLines.join('\n');
+        updateLyricsStats();
+        saveLyrics();
+        showToast('U strukturua në blloqe prej 4 taktesh! 🎵');
     });
 }
 

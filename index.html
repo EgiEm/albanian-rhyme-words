@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
     <!-- Background overlay for depth -->
@@ -107,6 +107,9 @@
                         </span>
                     </div>
                     <div class="lyrics-actions">
+                        <button id="structure-lyrics-btn" class="btn btn-secondary btn-sm" style="border-color: rgba(0, 210, 255, 0.25); color: var(--primary);" title="Rendit tekstin në blloqe prej 4 rreshtash (taktesh)">
+                            Strukturo 4 Takte 🎵
+                        </button>
                         <button id="copy-lyrics-btn" class="btn btn-secondary btn-sm" title="Kopjo krejt tekstin">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
                             Kopjo
@@ -121,6 +124,7 @@
                 <div class="lyrics-footer">
                     <span id="char-count">0 shkronja</span>
                     <span id="word-count">0 fjalë</span>
+                    <span id="bar-count" style="color: var(--primary); font-weight: 500;">0 takte (0 blloqe)</span>
                 </div>
             </section>
         </main>
@@ -130,7 +134,7 @@
     <div id="toast" class="toast">Kopjuar!</div>
 
     <!-- Application Script -->
-    <script src="wordlist.js?v=7"></script>
-    <script src="app.js?v=7"></script>
+    <script src="wordlist.js?v=8"></script>
+    <script src="app.js?v=8"></script>
 </body>
 </html>
