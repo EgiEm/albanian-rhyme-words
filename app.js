@@ -79,7 +79,7 @@ function updateLyricsStats() {
     
     // Count words (filter empty strings)
     const words = text.trim().split(/\s+/).filter(w => w.length > 0);
-    if (wordCountDisplay) wordCountDisplay.textContent = `${words.length} fjalë`;
+    if (wordCountDisplay) wordCountDisplay.textContent = `${words.length} fjale`;
     
     // Count non-empty lines as "takte" (bars)
     const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
@@ -136,7 +136,7 @@ async function loadWordlist() {
 
         // Fallback: Fetch text file if JS array is not loaded (e.g. if script load failed)
         const response = await fetch('shqip.txt');
-        if (!response.ok) throw new Error('Dështoi ngarkimi i fjalorit.');
+        if (!response.ok) throw new Error('Deshtoi ngarkimi i fjalorit.');
         
         const contentLength = response.headers.get('content-length');
         const totalBytes = contentLength ? parseInt(contentLength, 10) : 2100000;
@@ -180,8 +180,8 @@ async function loadWordlist() {
         
     } catch (err) {
         console.error(err);
-        loadingOverlay.querySelector('h2').textContent = 'Ndodhi një gabim!';
-        loadingOverlay.querySelector('p').textContent = 'Ju lutem rifreskoni faqen. Sigurohuni që wordlist.js ose shqip.txt ekziston.';
+        loadingOverlay.querySelector('h2').textContent = 'Ndodhi nje gabim!';
+        loadingOverlay.querySelector('p').textContent = 'Ju lutem rifreskoni faqen. Sigurohuni qe wordlist.js ose shqip.txt ekziston.';
         loadingOverlay.querySelector('.loader').style.borderTopColor = '#ef4444';
     }
 }
@@ -263,18 +263,18 @@ function setupEventListeners() {
     // Copy Lyrics Button
     copyLyricsBtn.addEventListener('click', () => {
         if (!lyricsTextarea.value.trim()) {
-            showToast('Notepadi është i zbrazët!');
+            showToast('Notepadi eshte i zbrazet!');
             return;
         }
         navigator.clipboard.writeText(lyricsTextarea.value)
-            .then(() => showToast('Teksti u kopjua në clipboard!'))
-            .catch(() => showToast('Dështoi kopjimi i tekstit.'));
+            .then(() => showToast('Teksti u kopjua ne clipboard!'))
+            .catch(() => showToast('Deshtoi kopjimi i tekstit.'));
     });
 
     // Clear Lyrics Button
     clearLyricsBtn.addEventListener('click', () => {
         if (!lyricsTextarea.value.trim()) return;
-        if (confirm('A je i sigurt që dëshiron ta pastrosh tërë tekstin?')) {
+        if (confirm('A je i sigurt qe deshiron ta pastrosh tere tekstin?')) {
             lyricsTextarea.value = '';
             updateLyricsStats();
             saveLyrics();
@@ -832,7 +832,7 @@ function filterAndRenderResults() {
         titleEl.className = 'rhyme-group-title top-picks-title';
         titleEl.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right:6px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            Top Picks (Përshtatjet më të mira për Rap)
+            Top Picks (Pershtatjet me te mira per Rap)
         `;
         topGroupEl.appendChild(titleEl);
         
@@ -844,9 +844,9 @@ function filterAndRenderResults() {
             pill.className = 'word-pill top-pick-pill';
             pill.dataset.strength = item.strength;
             
-            let titleText = 'Asonancë (Zanore)';
-            if (item.strength === 'perfect') titleText = 'Rimë e Plotë';
-            if (item.strength === 'good') titleText = 'Rimë e Mesme';
+            let titleText = 'Asonance (Zanore)';
+            if (item.strength === 'perfect') titleText = 'Rime e Plote';
+            if (item.strength === 'good') titleText = 'Rime e Mesme';
             pill.title = `${titleText} - Top Pick`;
             
             pill.innerHTML = `
@@ -898,9 +898,9 @@ function filterAndRenderResults() {
             pill.dataset.strength = item.strength;
             
             // Tooltip or helper representation of strength
-            let titleText = 'Asonancë (Rregull Zanoresh)';
-            if (item.strength === 'perfect') titleText = 'Rimë e Plotë (3 shkronjat e fundit)';
-            if (item.strength === 'good') titleText = 'Rimë e Mesme (2 shkronjat e fundit)';
+            let titleText = 'Asonance (Rregull Zanoresh)';
+            if (item.strength === 'perfect') titleText = 'Rime e Plote (3 shkronjat e fundit)';
+            if (item.strength === 'good') titleText = 'Rime e Mesme (2 shkronjat e fundit)';
             pill.title = titleText;
             
             pill.innerHTML = `
@@ -945,13 +945,14 @@ function getWordStem(word) {
 }
 
 // Generate Gegërisht equivalents from standard words and inject Kosovar slang words
+// Generate Gegërisht equivalents from standard words and inject Kosovar slang words
 function processAndInjectGeg(rawList) {
     const GEG_WORDS = [
         'kerr', 'kerri', 'kerre', 'kerret', 'kerrin', 'kerrash', 'kerrve', 
         'kurgjo', 'kurgjoja', 'sen', 'seni', 'sene', 'senet', 'senin', 'seneve', 
-        'loc', 'loci', 'loca', 'shac', 'shaci', 'shaca', 'shacave', 'shacët', 
-        'baba', 'babë', 'bir', 'biri', 'shoq', 'shoqi', 'dreq', 'dreqi', 'dreqët', 
-        'budall', 'budalla', 'budallët', 'koti', 'lshoj', 'lshojm', 'lshojn', 'lshu', 
+        'loc', 'loci', 'loca', 'shac', 'shaci', 'shaca', 'shacave', 'shacet', 
+        'baba', 'babe', 'bir', 'biri', 'shoq', 'shoqi', 'dreq', 'dreqi', 'dreqet', 
+        'budall', 'budalla', 'budallet', 'koti', 'lshoj', 'lshojm', 'lshojn', 'lshu', 
         'kallxoj', 'kallxojm', 'kallxojn', 'kallxu', 'ngoj', 'ngojm', 'ngojn', 'ngu', 
         'shkoj', 'shkojm', 'shkojn', 'shku', 'bojm', 'bojn', 'boju', 'bo', 'thom', 'thojn', 
         'tash', 'bash', 'spe', 'po', 'veq', 'shmek', 'shmeki', 'llaf', 'llafi', 'llafe', 'llafet', 
@@ -960,13 +961,13 @@ function processAndInjectGeg(rawList) {
         'hejter', 'hejtera', 'hejterat', 'beat', 'beati', 'beat-i', 'flow', 'flow-i', 'rim', 
         'rima', 'rimat', 'rap', 'rapi', 'rap-i', 'trap', 'trapi', 'trap-i', 'drill', 'drilli', 
         'drill-i', 'hustle', 'hustleri', 'hustlerat', 'keq', 'keqi', 'keqt', 'fort', 'forti', 
-        'fortë', 'smut', 'smuti', 'xhelozi', 'xheloz', 'xhelozat', 'fam', 'fama', 'fami', 'kesh', 
+        'forte', 'smut', 'smuti', 'xhelozi', 'xheloz', 'xhelozat', 'fam', 'fama', 'fami', 'kesh', 
         'keshi', 'kesh-i', 'para', 'lek', 'leki', 'plumba', 'plumbi', 'plumbat', 'naten', 'nata', 
-        'nates', 'ditën', 'dita', 'dites', 'rruge', 'rruga', 'rruges', 'rrugt', 'rrugët', 'asfallt', 
+        'nates', 'diten', 'dita', 'dites', 'rruge', 'rruga', 'rruges', 'rrugt', 'rruget', 'asfallt', 
         'asfallti', 'benz', 'benzi', 'audi', 'audi-i', 'bmw', 'bmw-ja', 'mercedes', 'mercedesi', 
         'porshe', 'porsheja', 'ferrari', 'ferrari-i', 'lamborghini', 'lambo', 'lambo-ja', 
         'shpejt', 'shpejti', 'gazin', 'gazi', 'frena', 'freni', 'ndalu', 'ndalo', 'vrap', 'vrapi', 
-        'vrapu', 'ik', 'iki', 'iku', 'hajt', 'hajde', 'shuj', 'shujë', 'kqyr', 'kqyri', 'kqyrim', 'kqyru', 'kqyrt'
+        'vrapu', 'ik', 'iki', 'iku', 'hajt', 'hajde', 'shuje', 'kqyr', 'kqyri', 'kqyrim', 'kqyru', 'kqyrt'
     ];
 
     const resultSet = new Set();
@@ -980,28 +981,28 @@ function processAndInjectGeg(rawList) {
         if (w.endsWith('uar') && w.length > 3) {
             resultSet.add(w.substring(0, w.length - 3) + 'u');
         }
-        // standard verbs ending in "-uarë" -> Gegërisht "-u"
-        if (w.endsWith('uarë') && w.length > 4) {
+        // standard verbs ending in "-uare" (previously "-uarë") -> Gegërisht "-u"
+        if (w.endsWith('uare') && w.length > 4) {
             resultSet.add(w.substring(0, w.length - 4) + 'u');
         }
         // standard verbs ending in "-uarit" -> Gegërisht "-ut"
         if (w.endsWith('uarit') && w.length > 5) {
             resultSet.add(w.substring(0, w.length - 5) + 'ut');
         }
-        // standard 1st person plural "-ojmë" -> Gegërisht "-ojm"
-        if (w.endsWith('ojmë') && w.length > 4) {
+        // standard 1st person plural "-ojme" (previously "-ojmë") -> Gegërisht "-ojm"
+        if (w.endsWith('ojme') && w.length > 4) {
             resultSet.add(w.substring(0, w.length - 4) + 'ojm');
         }
-        // standard 1st person plural "-ejmë" -> Gegërisht "-ejm"
-        if (w.endsWith('ejmë') && w.length > 4) {
+        // standard 1st person plural "-ejme" (previously "-ejmë") -> Gegërisht "-ejm"
+        if (w.endsWith('ejme') && w.length > 4) {
             resultSet.add(w.substring(0, w.length - 4) + 'ejm');
         }
-        // standard 3rd person plural "-ojnë" -> Gegërisht "-ojn"
-        if (w.endsWith('ojnë') && w.length > 4) {
+        // standard 3rd person plural "-ojne" (previously "-ojnë") -> Gegërisht "-ojn"
+        if (w.endsWith('ojne') && w.length > 4) {
             resultSet.add(w.substring(0, w.length - 4) + 'ojn');
         }
-        // standard 3rd person plural "-ejnë" -> Gegërisht "-ejn"
-        if (w.endsWith('ejnë') && w.length > 4) {
+        // standard 3rd person plural "-ejne" (previously "-ejnë") -> Gegërisht "-ejn"
+        if (w.endsWith('ejne') && w.length > 4) {
             resultSet.add(w.substring(0, w.length - 4) + 'ejn');
         }
     }
@@ -1013,3 +1014,4 @@ function processAndInjectGeg(rawList) {
     
     return Array.from(resultSet).sort();
 }
+

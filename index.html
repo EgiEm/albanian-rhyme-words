@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20">
+    <link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
     <!-- Background overlay for depth -->
@@ -23,7 +23,7 @@
         <div id="loading-overlay" class="loading-overlay">
             <div class="loader"></div>
             <h2>Duke ngarkuar fjalorin shqip...</h2>
-            <p>Po përgatiten mbi 216,000 fjalë për kërkim instant.</p>
+            <p>Po pergatiten mbi 216,000 fjale per kerkim instant.</p>
             <div class="progress-bar-container">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
@@ -35,12 +35,12 @@
             <section class="search-section card">
                 <header class="app-header">
                     <h1 class="gradient-text">Albanian Rhyme Words 🎤</h1>
-                    <p class="subtitle">Gjej rima shqip për këngën tënde të radhës</p>
+                    <p class="subtitle">Gjej rima shqip per kengen tende te radhes</p>
                 </header>
 
                 <!-- Search Form -->
                 <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Shkruaj një fjalë (p.sh. Audi, Vibe, Rruga)..." disabled autocomplete="off">
+                    <input type="text" id="search-input" placeholder="Shkruaj nje fjale (p.sh. Audi, Vibe, Rruga)..." disabled autocomplete="off">
                     <button id="search-btn" class="btn btn-primary" disabled>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         Kërko
@@ -51,12 +51,12 @@
                 <div class="filters-container">
                     <!-- Rhyme Match Filter -->
                     <div class="filter-group">
-                        <label>Lloji i Rimës</label>
+                        <label>Lloji i Rimes</label>
                         <div class="chip-group" id="rhyme-type-chips">
-                            <button class="chip active" data-type="all">Të Gjitha</button>
-                            <button class="chip chip-recommended" data-type="perfect">Rima të Plota (Rekomanduar) ⭐</button>
-                            <button class="chip" data-type="good">Rima të Mesme</button>
-                            <button class="chip" data-type="vowel">Asonancë (Zanore)</button>
+                            <button class="chip active" data-type="all">Te Gjitha</button>
+                            <button class="chip chip-recommended" data-type="perfect">Rima te Plota (Rekomanduar) ⭐</button>
+                            <button class="chip" data-type="good">Rima te Mesme</button>
+                            <button class="chip" data-type="vowel">Asonance (Zanore)</button>
                         </div>
                     </div>
 
@@ -64,7 +64,7 @@
                     <div class="filter-group">
                         <label>Numri i Rrokjeve</label>
                         <div class="chip-group" id="syllable-chips">
-                            <button class="chip active chip-recommended" data-syllable="all">Çfarëdo (Rekomanduar) ⭐</button>
+                            <button class="chip active chip-recommended" data-syllable="all">Cfaredo (Rekomanduar) ⭐</button>
                             <button class="chip" data-syllable="1">1 Rrokje</button>
                             <button class="chip" data-syllable="2">2 Rrokje</button>
                             <button class="chip" data-syllable="3">3 Rrokje</button>
@@ -75,7 +75,7 @@
 
                 <!-- Results Header & Info -->
                 <div class="results-meta" id="results-meta" style="display: none;">
-                    <h2 id="results-title">Fjalët që rimojnë me <span id="searched-word-display" class="highlight">...</span></h2>
+                    <h2 id="results-title">Fjalet qe rimojne me <span id="searched-word-display" class="highlight">...</span></h2>
                     <span id="results-count" class="badge">0 rezultate</span>
                 </div>
 
@@ -83,7 +83,7 @@
                 <div class="results-container" id="results-container">
                     <div class="empty-state">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-icon"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                        <p>Shkruaj një fjalë më lart ose provo këto shembuj:</p>
+                        <p>Shkruaj nje fjale me lart ose provo keto shembuj:</p>
                         <div class="search-suggestions">
                             <button class="suggestion-btn">audi</button>
                             <button class="suggestion-btn">rruga</button>
@@ -91,7 +91,7 @@
                             <button class="suggestion-btn">koha</button>
                             <button class="suggestion-btn">vibe</button>
                         </div>
-                        <small>Kliko mbi cilëndo fjalë në rezultate për ta kopjuar menjëherë.</small>
+                        <small>Kliko mbi cilendo fjale ne rezultate per ta kopjuar menjehere.</small>
                     </div>
                 </div>
             </section>
@@ -117,10 +117,10 @@
                         </button>
                     </div>
                 </div>
-                <textarea id="lyrics-textarea" placeholder="Shkruaj vargjet e tua këtu ndërkohë që kërkon rima..." spellcheck="false"></textarea>
+                <textarea id="lyrics-textarea" placeholder="Shkruaj vargjet e tua ketu nderkohe qe kerkon rima..." spellcheck="false"></textarea>
                 <div class="lyrics-footer">
                     <span id="char-count">0 shkronja</span>
-                    <span id="word-count">0 fjalë</span>
+                    <span id="word-count">0 fjale</span>
                     <span id="bar-count" style="color: var(--primary); font-weight: 500;">0 takte (0 blloqe)</span>
                 </div>
             </section>
@@ -131,6 +131,6 @@
     <div id="toast" class="toast">Kopjuar!</div>
 
     <script src="wordlist.js?v=19"></script>
-    <script src="app.js?v=20"></script>
+    <script src="app.js?v=21"></script>
 </body>
 </html>
