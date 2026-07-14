@@ -4,36 +4,67 @@ const DIPHTHONGS = ['ua', 'ue', 'ye', 'ie', 'au', 'eu', 'ou'];
 
 // Set of high-priority rap and street keywords used for "Top Picks"
 const RAP_KEYWORDS = new Set([
-    'kerr', 'kerri', 'kerre', 'kerret', 'kerrin', 'kerrash', 'kerrve', 
-    'kurgjo', 'kurgjoja', 'sen', 'seni', 'sene', 'senet', 'senin', 'seneve', 
-    'loc', 'loci', 'loca', 'shac', 'shaci', 'shaca', 'shacave', 'shacët', 
-    'baba', 'babë', 'bir', 'biri', 'shoq', 'shoqi', 'dreq', 'dreqi', 'dreqët', 
-    'budall', 'budalla', 'budallët', 'koti', 'lshoj', 'lshojm', 'lshojn', 'lshu', 
-    'kallxoj', 'kallxojm', 'kallxojn', 'kallxu', 'ngoj', 'ngojm', 'ngojn', 'ngu', 
-    'shkoj', 'shkojm', 'shkojn', 'shku', 'bojm', 'bojn', 'boju', 'bo', 'thom', 'thojn', 
-    'tash', 'bash', 'spe', 'po', 'veq', 'shmek', 'shmeki', 'llaf', 'llafi', 'llafe', 'llafet', 
-    'zhurme', 'zhurma', 'pare', 'paret', 'para', 'leke', 'leket', 'tona', 'tonat', 'ton', 
-    'krejt', 'krejtve', 'shoki', 'shokit', 'shokt', 'vibe', 'vibe-i', 'vibe-at', 'hejt', 
-    'hejter', 'hejtera', 'hejterat', 'beat', 'beati', 'beat-i', 'flow', 'flow-i', 'rim', 
-    'rima', 'rimat', 'rap', 'rapi', 'rap-i', 'trap', 'trapi', 'trap-i', 'drill', 'drilli', 
-    'drill-i', 'hustle', 'hustleri', 'hustlerat', 'keq', 'keqi', 'keqt', 'fort', 'forti', 
-    'fortë', 'smut', 'smuti', 'xhelozi', 'xheloz', 'xhelozat', 'fam', 'fama', 'fami', 'kesh', 
-    'keshi', 'kesh-i', 'para', 'lek', 'leki', 'plumba', 'plumbi', 'plumbat', 'naten', 'nata', 
-    'nates', 'ditën', 'dita', 'dites', 'rruge', 'rruga', 'rruges', 'rrugt', 'rrugët', 'asfallt', 
-    'asfallti', 'benz', 'benzi', 'audi', 'audi-i', 'bmw', 'bmw-ja', 'mercedes', 'mercedesi', 
-    'porshe', 'porsheja', 'ferrari', 'ferrari-i', 'lamborghini', 'lambo', 'lambo-ja', 
-    'shpejt', 'shpejti', 'gazin', 'gazi', 'frena', 'freni', 'ndalu', 'ndalo', 'vrap', 'vrapi', 
+    'kerr', 'kerri', 'kerre', 'kerret', 'kerrin', 'kerrash', 'kerrve',
+    'kurgjo', 'kurgjoja', 'sen', 'seni', 'sene', 'senet', 'senin', 'seneve',
+    'loc', 'loci', 'loca', 'shac', 'shaci', 'shaca', 'shacave', 'shacët',
+    'baba', 'babë', 'bir', 'biri', 'shoq', 'shoqi', 'dreq', 'dreqi', 'dreqët',
+    'budall', 'budalla', 'budallët', 'koti', 'lshoj', 'lshojm', 'lshojn', 'lshu',
+    'kallxoj', 'kallxojm', 'kallxojn', 'kallxu', 'ngoj', 'ngojm', 'ngojn', 'ngu',
+    'shkoj', 'shkojm', 'shkojn', 'shku', 'bojm', 'bojn', 'boju', 'bo', 'thom', 'thojn',
+    'tash', 'bash', 'spe', 'po', 'veq', 'shmek', 'shmeki', 'llaf', 'llafi', 'llafe', 'llafet',
+    'zhurme', 'zhurma', 'pare', 'paret', 'para', 'leke', 'leket', 'tona', 'tonat', 'ton',
+    'krejt', 'krejtve', 'shoki', 'shokit', 'shokt', 'vibe', 'vibe-i', 'vibe-at', 'hejt',
+    'hejter', 'hejtera', 'hejterat', 'beat', 'beati', 'beat-i', 'flow', 'flow-i', 'rim',
+    'rima', 'rimat', 'rap', 'rapi', 'rap-i', 'trap', 'trapi', 'trap-i', 'drill', 'drilli',
+    'drill-i', 'hustle', 'hustleri', 'hustlerat', 'keq', 'keqi', 'keqt', 'fort', 'forti',
+    'fortë', 'smut', 'smuti', 'xhelozi', 'xheloz', 'xhelozat', 'fam', 'fama', 'fami', 'kesh',
+    'keshi', 'kesh-i', 'para', 'lek', 'leki', 'plumba', 'plumbi', 'plumbat', 'naten', 'nata',
+    'nates', 'ditën', 'dita', 'dites', 'rruge', 'rruga', 'rruges', 'rrugt', 'rrugët', 'asfallt',
+    'asfallti', 'benz', 'benzi', 'audi', 'audi-i', 'bmw', 'bmw-ja', 'mercedes', 'mercedesi',
+    'porshe', 'porsheja', 'ferrari', 'ferrari-i', 'lamborghini', 'lambo', 'lambo-ja',
+    'shpejt', 'shpejti', 'gazin', 'gazi', 'frena', 'freni', 'ndalu', 'ndalo', 'vrap', 'vrapi',
     'vrapu', 'ik', 'iki', 'iku', 'hajt', 'hajde', 'shuj', 'shujë', 'kqyr', 'kqyri', 'kqyrim', 'kqyru', 'kqyrt',
     'mua', 'mu', 'ty', 'tu', 'vet', 'vetja', 'veti', 'gjallë', 'vdekë', 'vdekje', 'gjak', 'gjakut', 'zjarr', 'zjarri', 'akull', 'ftohtë', 'nxehtë', 'lot', 'loti', 'botë', 'bota', 'jetë', 'jeta', 'mbret', 'mbreti', 'shtet', 'shteti', 'besim', 'tradhti', 'dashuri', 'urrejtje', 'shpresë', 'loja', 'lojë', 'fitore', 'humbje', 'sukses', 'ari', 'flori', 'armik', 'mik', 'miku', 'besnik', 'tradhtar', 'fajtor', 'shpirt', 'trup', 'trupi', 'turp', 'turpi', 'nder', 'nderi', 'zot', 'zoti', 'ferr', 'ferri', 'parajsë', 'sy', 'sytë', 'dorë', 'dora', 'krah', 'krahu', 'zemër', 'zemra', 'mendje', 'mendja', 'kokë', 'koka', 'fjalë', 'fjala', 'besë', 'besa', 'shokë', 'shokt', 'muri', 'shkru', 'punu', 'shku', 'lexu', 'kallxu', 'ndertu', 'ndalu', 'provu', 'mbaru', 'maru', 'bo', 'lidh', 'çmend', 'zjarr', 'mall', 'humb', 'fitu', 'shpresu', 'besu', 'shkatrru', 'ndryshu', 'kriju', 'fillu', 'mbaru', 'harru', 'kujtu', 'ndje', 'ndjejm', 'ndjejn', 'urrej', 'dashuroj', 'shkatërroj', 'harroj', 'kujtoj', 'rrejt', 'rren', 'rrena', 'rrenat', 'vashë', 'qikë', 'gocë', 'femër', 'djalë', 'çun', 'pishmon', 'vonë', 'herët', 'vetëm', 'bashkë', 'zonë', 'zona', 'kodra', 'kodër', 'mal', 'mali', 'det', 'deti', 'qiell', 'qielli', 'diell', 'dielli', 'hënë', 'hëna', 'yll', 'yjet', 'retë', 'shi', 'shiu', 'borë', 'bora', 'erë', 'era', 'di', 'gadi'
 ]);
 
 let wordlist = [];
 let currentResults = [];
+let selectedBRhymeIndex = 0;
+let selectedARhymeIndex = 0;
+
+// Preset B-Rhymes pairs for the 4-Takt (4-Bar) Template Generator
+const RAP_B_RHYMES = [
+    ['kerr', 'ferr'],
+    ['shpejt', 'drejt'],
+    ['nate', 'date'],
+    ['hejt', 'beat'],
+    ['sen', 'men'],
+    ['gjak', 'pak'],
+    ['loc', 'shac'],
+    ['fame', 'nene'],
+    ['shkru', 'punu'],
+    ['kallxu', 'ndalu'],
+    ['lot', 'zot'],
+    ['keq', 'dreq'],
+    ['fort', 'sport'],
+    ['rap', 'trap'],
+    ['vibe', 'jete'],
+    ['bashke', 'jashte'],
+    ['pare', 'llafe'],
+    ['nxehte', 'lehte']
+];
+
+// Blacklist of obscure/rare/obsolete dictionary words in Albanian to exclude from the songwriting generator
+const WEIRD_WORDS_BLACKLIST = new Set([
+    'cenjt', 'enjt', 'fyejt', 'nyejt', 'diejt', 'buajt', 'duajt', 'druajt',
+    'prajt', 'shuajt', 'vrenjt', 'zbrujt', 'ndruajt', 'zhguajt', 'cejtn',
+    'bruit', 'nyje', 'nyjet'
+]);
+
+
 
 
 // DOM Elements
-const loadingOverlay = document.getElementById('loading-overlay');
-const progressBar = document.getElementById('progress-bar');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 const rhymeTypeChips = document.getElementById('rhyme-type-chips');
@@ -76,17 +107,17 @@ function loadLyricsPad() {
 function updateLyricsStats() {
     const text = lyricsTextarea.value;
     if (charCountDisplay) charCountDisplay.textContent = `${text.length} shkronja`;
-    
+
     // Count words (filter empty strings)
     const words = text.trim().split(/\s+/).filter(w => w.length > 0);
     if (wordCountDisplay) wordCountDisplay.textContent = `${words.length} fjale`;
-    
+
     // Count non-empty lines as "takte" (bars)
     const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
     const barCount = lines.length;
     const blocksCount = Math.floor(barCount / 4);
     const remaining = barCount % 4;
-    
+
     let barText = `${barCount} takte (${blocksCount} blloqe)`;
     if (remaining > 0) {
         barText = `${barCount} takte (${blocksCount} blloqe, +${remaining} rr.)`;
@@ -99,90 +130,42 @@ function updateLyricsStats() {
 // Save Lyrics Pad to localStorage
 function saveLyrics() {
     localStorage.setItem('albanian_rhymes_lyrics', lyricsTextarea.value);
-    
+
     // Show quick visual pulse of saved status
     saveStatus.style.opacity = '1';
     const statusDot = saveStatus.querySelector('.status-dot');
     statusDot.style.backgroundColor = 'var(--primary)';
     statusDot.style.boxShadow = '0 0 10px var(--primary)';
-    
+
     setTimeout(() => {
         statusDot.style.backgroundColor = 'var(--accent-green)';
         statusDot.style.boxShadow = '0 0 8px var(--accent-green)';
     }, 500);
 }
 
-// Fetch and load the dictionary with progress tracking
+// Fetch and load the dictionary instantly
 async function loadWordlist() {
     try {
         // If loaded via wordlist.js (local file support to bypass CORS on file:// protocol)
         if (window.wordlist && window.wordlist.length > 0) {
             wordlist = processAndInjectGeg(window.wordlist);
             console.log(`Wordlist loaded from JS & processed: ${wordlist.length} words.`);
-            
-            // Animate progress bar to 100% quickly
-            progressBar.style.width = '100%';
-            setTimeout(() => {
-                loadingOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    loadingOverlay.style.display = 'none';
-                    searchInput.removeAttribute('disabled');
-                    searchBtn.removeAttribute('disabled');
-                    searchInput.focus();
-                }, 500);
-            }, 300);
+            searchInput.focus();
             return;
         }
 
-        // Fallback: Fetch text file if JS array is not loaded (e.g. if script load failed)
+        // Fallback: Fetch text file if JS array is not loaded
         const response = await fetch('shqip.txt');
         if (!response.ok) throw new Error('Deshtoi ngarkimi i fjalorit.');
-        
-        const contentLength = response.headers.get('content-length');
-        const totalBytes = contentLength ? parseInt(contentLength, 10) : 2100000;
-        
-        const reader = response.body.getReader();
-        let receivedBytes = 0;
-        let chunks = [];
-        
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            
-            chunks.push(value);
-            receivedBytes += value.length;
-            
-            const percent = Math.min(100, Math.round((receivedBytes / totalBytes) * 100));
-            progressBar.style.width = `${percent}%`;
-        }
-        
-        const allChunks = new Uint8Array(receivedBytes);
-        let position = 0;
-        for (let chunk of chunks) {
-            allChunks.set(chunk, position);
-            position += chunk.length;
-        }
-        
-        const text = new TextDecoder('utf-8').decode(allChunks);
+
+        const text = await response.text();
         const rawList = text.split(/\r?\n/).map(w => w.trim()).filter(w => w.length > 0);
         wordlist = processAndInjectGeg(rawList);
         console.log(`Wordlist loaded from fetch & processed: ${wordlist.length} words.`);
-        
-        setTimeout(() => {
-            loadingOverlay.style.opacity = '0';
-            setTimeout(() => {
-                loadingOverlay.style.display = 'none';
-                searchInput.removeAttribute('disabled');
-                searchBtn.removeAttribute('disabled');
-                searchInput.focus();
-            }, 500);
-        }, 300);
-        
+        searchInput.focus();
+
     } catch (err) {
-        console.error(err);
-        loadingOverlay.querySelector('h2').textContent = 'Ndodhi nje gabim!';
-        loadingOverlay.querySelector('p').textContent = 'Ju lutem rifreskoni faqen. Sigurohuni qe wordlist.js ose shqip.txt ekziston.';
-        loadingOverlay.querySelector('.loader').style.borderTopColor = '#ef4444';
+        console.error('Gabim gjate ngarkimit te fjalorit:', err);
     }
 }
 
@@ -199,7 +182,7 @@ function setupEventListeners() {
             resetToEmptyState();
             return;
         }
-        
+
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             triggerSearch();
@@ -224,7 +207,7 @@ function setupEventListeners() {
     resultsContainer.addEventListener('click', (e) => {
         const btn = e.target.closest('.suggestion-btn');
         if (!btn) return;
-        
+
         searchInput.value = btn.textContent;
         triggerSearch();
         searchInput.focus();
@@ -234,11 +217,11 @@ function setupEventListeners() {
     rhymeTypeChips.addEventListener('click', (e) => {
         const chip = e.target.closest('.chip');
         if (!chip) return;
-        
+
         rhymeTypeChips.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         activeRhymeType = chip.dataset.type;
-        
+
         filterAndRenderResults();
     });
 
@@ -246,11 +229,11 @@ function setupEventListeners() {
     syllableChips.addEventListener('click', (e) => {
         const chip = e.target.closest('.chip');
         if (!chip) return;
-        
+
         syllableChips.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         activeSyllableFilter = chip.dataset.syllable;
-        
+
         filterAndRenderResults();
     });
 
@@ -291,10 +274,10 @@ function setupEventListeners() {
 function generateRapBar(word, templateIdx, theme) {
     const w = word.toLowerCase();
     const t = theme || 'rrugë';
-    
+
     // Theme-indexed template banks per word category
     // Each theme has templates for: verbs (-u/-o), feminine (-a/-ë/-e), masculine (-i/consonant), fallback
-    
+
     const THEMED_TEMPLATES = {
         'rrugë': {
             verb: [
@@ -547,9 +530,9 @@ function generateRapBar(word, templateIdx, theme) {
             ]
         }
     };
-    
+
     const themeData = THEMED_TEMPLATES[t] || THEMED_TEMPLATES['rrugë'];
-    
+
     // Select appropriate template array based on word ending
     let templates;
     if ((w.endsWith('u') || w.endsWith('o') || w === 'bo') && w.length >= 2) {
@@ -561,14 +544,14 @@ function generateRapBar(word, templateIdx, theme) {
     } else {
         templates = themeData.fall;
     }
-    
+
     const setup = templates[templateIdx % templates.length];
-    
+
     // Clean up template text from trailing placeholders that were meant for "tag" styling
     let cleanSetup = setup.trim();
     cleanSetup = cleanSetup.replace(/\s+(me ky|si ky|jam ky|ky|kjo|këtë|kët|kjo osht|jam|veq)$/i, "");
     cleanSetup = cleanSetup.trim().replace(/,$/, "");
-    
+
     return { setup: cleanSetup, word: word };
 }
 
@@ -599,12 +582,12 @@ function countSyllables(word) {
     word = word.toLowerCase();
     let vowelsCount = 0;
     let i = 0;
-    
+
     while (i < word.length) {
         if (isVowel(word[i])) {
             // Check if it forms a diphthong with the next character
-            if (i + 1 < word.length && isVowel(word[i+1])) {
-                const pair = word[i] + word[i+1];
+            if (i + 1 < word.length && isVowel(word[i + 1])) {
+                const pair = word[i] + word[i + 1];
                 if (DIPHTHONGS.includes(pair)) {
                     vowelsCount++;
                     i += 2;
@@ -635,12 +618,12 @@ function calculateRhyme(word, target) {
     // Normalize both words to handle diacritics (ë -> e, ç -> c) during rhyme checks
     const normWord = word.toLowerCase().replace(/ë/g, 'e').replace(/ç/g, 'c');
     const normTarget = target.toLowerCase().replace(/ë/g, 'e').replace(/ç/g, 'c');
-    
+
     if (normWord === normTarget) return null;
-    
+
     const wordLen = normWord.length;
     const targetLen = normTarget.length;
-    
+
     // Check Perfect Rhymes (share last 3+ characters, or last 2 for short words)
     const perfectLen = targetLen >= 4 ? 3 : 2;
     if (wordLen >= perfectLen && targetLen >= perfectLen) {
@@ -654,7 +637,7 @@ function calculateRhyme(word, target) {
             };
         }
     }
-    
+
     // Check Good Rhymes (share last 2 characters)
     if (wordLen >= 2 && targetLen >= 2) {
         const targetEnd = normTarget.substring(targetLen - 2);
@@ -667,7 +650,7 @@ function calculateRhyme(word, target) {
             };
         }
     }
-    
+
     // Check Vowel Rhymes / Asonancë (share last 2 vowels)
     const targetVowels = getLastVowels(normTarget, 2);
     if (targetVowels.length === 2) {
@@ -680,7 +663,7 @@ function calculateRhyme(word, target) {
             };
         }
     }
-    
+
     return null;
 }
 
@@ -688,7 +671,7 @@ function calculateRhyme(word, target) {
 function showToast(message) {
     toast.textContent = message;
     toast.classList.add('show');
-    
+
     setTimeout(() => {
         toast.classList.remove('show');
     }, 2000);
@@ -705,12 +688,12 @@ function copyWord(word) {
 function triggerSearch() {
     const rawQuery = searchInput.value.trim();
     if (!rawQuery) return;
-    
+
     const query = rawQuery.toLowerCase();
     searchedWordDisplay.textContent = rawQuery;
     resultsMeta.style.display = 'flex';
     resultsContainer.innerHTML = '<div class="empty-state"><div class="loader" style="width:30px;height:30px;border-width:3px;margin-bottom:12px;"></div><p>Duke kërkuar rima...</p></div>';
-    
+
     // Run search on next frame to keep UI responsive
     setTimeout(() => {
         const results = [];
@@ -720,8 +703,10 @@ function triggerSearch() {
                 results.push(match);
             }
         }
-        
+
         currentResults = results;
+        selectedBRhymeIndex = Math.floor(Math.random() * RAP_B_RHYMES.length);
+        selectedARhymeIndex = 0;
         filterAndRenderResults();
     }, 50);
 }
@@ -739,15 +724,15 @@ function filterAndRenderResults() {
         `;
         return;
     }
-    
+
     // Apply filters
     let filtered = currentResults;
-    
+
     // 1. Filter by Rhyme Type
     if (activeRhymeType !== 'all') {
         filtered = filtered.filter(item => item.strength === activeRhymeType);
     }
-    
+
     // 2. Filter by Syllables
     if (activeSyllableFilter !== 'all') {
         const targetSyllables = parseInt(activeSyllableFilter, 10);
@@ -757,14 +742,20 @@ function filterAndRenderResults() {
             filtered = filtered.filter(item => item.syllables === targetSyllables);
         }
     }
-    
+
     // 3. Deduplicate words sharing the same grammatical stem
-    // Sort by length ascending first so base/shorter words are processed first and kept
-    filtered.sort((a, b) => a.word.length - b.word.length);
-    
+    // Sort by strength first to prioritize stronger matches, then by length
+    const strengthOrder = { 'perfect': 1, 'good': 2, 'vowel': 3 };
+    filtered.sort((a, b) => {
+        if (strengthOrder[a.strength] !== strengthOrder[b.strength]) {
+            return strengthOrder[a.strength] - strengthOrder[b.strength];
+        }
+        return a.word.length - b.word.length;
+    });
+
     const uniqueFiltered = [];
     const seenStems = new Set();
-    
+
     for (let item of filtered) {
         const stem = getWordStem(item.word);
         if (!seenStems.has(stem)) {
@@ -772,10 +763,10 @@ function filterAndRenderResults() {
             uniqueFiltered.push(item);
         }
     }
-    
+
     filtered = uniqueFiltered;
     resultsCount.textContent = `${filtered.length} rezultate`;
-    
+
     if (filtered.length === 0) {
         resultsContainer.innerHTML = `
             <div class="empty-state">
@@ -785,7 +776,7 @@ function filterAndRenderResults() {
         `;
         return;
     }
-    
+
     // Group filtered results by syllable count
     const groups = {};
     for (let item of filtered) {
@@ -796,9 +787,8 @@ function filterAndRenderResults() {
         }
         groups[key].push(item);
     }
-    
+
     // Sort words inside groups: perfect first, then good, then vowel, and alphabetically
-    const strengthOrder = { 'perfect': 1, 'good': 2, 'vowel': 3 };
     for (let key in groups) {
         groups[key].sort((a, b) => {
             if (strengthOrder[a.strength] !== strengthOrder[b.strength]) {
@@ -807,10 +797,10 @@ function filterAndRenderResults() {
             return a.word.localeCompare(b.word);
         });
     }
-    
+
     // Clear display
     resultsContainer.innerHTML = '';
-    
+
     // 4. Render Top Picks for Rap first
     const topPickItems = filtered.filter(item => RAP_KEYWORDS.has(item.word));
     // Sort by strength (perfect, good, vowel) and then alphabetically
@@ -820,14 +810,14 @@ function filterAndRenderResults() {
         }
         return a.word.localeCompare(b.word);
     });
-    
+
     const maxTopPicks = 10;
     const topPicksToShow = topPickItems.slice(0, maxTopPicks);
-    
+
     if (topPicksToShow.length > 0) {
         const topGroupEl = document.createElement('div');
         topGroupEl.className = 'rhyme-group top-picks-group';
-        
+
         const titleEl = document.createElement('h3');
         titleEl.className = 'rhyme-group-title top-picks-title';
         titleEl.innerHTML = `
@@ -835,83 +825,322 @@ function filterAndRenderResults() {
             Top Picks (Pershtatjet me te mira per Rap)
         `;
         topGroupEl.appendChild(titleEl);
-        
+
         const gridEl = document.createElement('div');
         gridEl.className = 'rhyme-grid';
-        
+
         for (let item of topPicksToShow) {
             const pill = document.createElement('div');
             pill.className = 'word-pill top-pick-pill';
             pill.dataset.strength = item.strength;
-            
+
             let titleText = 'Asonance (Zanore)';
             if (item.strength === 'perfect') titleText = 'Rime e Plote';
             if (item.strength === 'good') titleText = 'Rime e Mesme';
             pill.title = `${titleText} - Top Pick`;
-            
+
             pill.innerHTML = `
                 <span class="word-text">⭐ ${item.word}</span>
                 <span class="word-syllables">${item.syllables}</span>
             `;
-            
+
             pill.addEventListener('click', () => copyWord(item.word));
             gridEl.appendChild(pill);
         }
         topGroupEl.appendChild(gridEl);
         resultsContainer.appendChild(topGroupEl);
     }
-    
-    // 4-Takt Generator UI Block removed
 
-    
+    // 5. Render 4-Takt (AABB) Songwriting Template
+    const activeQuery = searchInput.value.trim();
+    if (activeQuery && filtered.length >= 1) {
+        const cleanQuery = activeQuery.toLowerCase().replace(/ë/g, 'e').replace(/ç/g, 'c');
+        
+        // Gather ALL rhyming candidates, excluding the query itself & blacklisted words
+        const allCandidates = filtered.filter(item => {
+            const w = item.word.toLowerCase();
+            return w !== cleanQuery && !WEIRD_WORDS_BLACKLIST.has(w);
+        });
+        
+        // Group candidates by syllable count
+        const bySyllable = {};
+        for (const item of allCandidates) {
+            const k = item.syllables >= 4 ? 4 : item.syllables;
+            if (!bySyllable[k]) bySyllable[k] = [];
+            bySyllable[k].push(item);
+        }
+        
+        // Build pairs inside each syllable group
+        // Cap the number of pairs to prioritize punchy 1-2 syllable words
+        const rhymeAPairs = [];
+        const maxPairsPerGroup = { 1: 99, 2: 8, 3: 3, 4: 1 };
+        
+        for (const sKey of Object.keys(bySyllable).sort((a, b) => parseInt(a) - parseInt(b))) {
+            const group = bySyllable[sKey];
+            const rapItems = [];
+            const otherItems = [];
+            const stems = new Set();
+            
+            // Prioritize RAP_KEYWORDS and deduplicate stems
+            for (const item of group) {
+                const w = item.word.toLowerCase();
+                const norm = w.replace(/ë/g, 'e').replace(/ç/g, 'c');
+                const stem = getWordStem(w);
+                if (stems.has(stem)) continue;
+                stems.add(stem);
+                
+                const isRap = RAP_KEYWORDS.has(w) || RAP_KEYWORDS.has(norm);
+                if (isRap) {
+                    rapItems.push(item);
+                } else {
+                    otherItems.push(item);
+                }
+            }
+            
+            // Sort rap and other items by rhyme strength (perfect, good, vowel), then alphabetically
+            const customSort = (a, b) => {
+                if (strengthOrder[a.strength] !== strengthOrder[b.strength]) {
+                    return strengthOrder[a.strength] - strengthOrder[b.strength];
+                }
+                return a.word.localeCompare(b.word);
+            };
+            rapItems.sort(customSort);
+            otherItems.sort(customSort);
+            
+            // Merge prioritized rap items at the beginning
+            const mergedWords = [...rapItems.map(item => item.word), ...otherItems.map(item => item.word)];
+            
+            // Generate pairs
+            const cap = maxPairsPerGroup[sKey] || 1;
+            let added = 0;
+            for (let i = 0; i < mergedWords.length - 1 && added < cap; i += 2) {
+                rhymeAPairs.push([mergedWords[i], mergedWords[i + 1]]);
+                added++;
+            }
+        }
+        
+        // Pick the current selected A-rhyme pair
+        let rhymeA1 = '';
+        let rhymeA2 = '';
+        if (rhymeAPairs.length > 0) {
+            const pair = rhymeAPairs[selectedARhymeIndex % rhymeAPairs.length];
+            rhymeA1 = pair[0];
+            rhymeA2 = pair[1];
+        } else if (allCandidates.length >= 2) {
+            rhymeA1 = allCandidates[0].word;
+            rhymeA2 = allCandidates[1].word;
+        } else if (allCandidates.length === 1) {
+            rhymeA1 = allCandidates[0].word;
+            rhymeA2 = allCandidates[0].word;
+        } else {
+            rhymeA1 = '...';
+            rhymeA2 = '...';
+        }
+        
+        // Pick current B-rhyme pair
+        const bPair = RAP_B_RHYMES[selectedBRhymeIndex % RAP_B_RHYMES.length];
+        const rhymeB1 = bPair[0];
+        const rhymeB2 = bPair[1];
+        
+        // Render AABB Template Box
+        const templateGroupEl = document.createElement('div');
+        templateGroupEl.className = 'rhyme-group';
+        templateGroupEl.style.background = 'rgba(0, 85, 255, 0.03)';
+        templateGroupEl.style.border = '1px solid rgba(0, 85, 255, 0.15)';
+        templateGroupEl.style.borderRadius = '12px';
+        templateGroupEl.style.padding = '18px 20px';
+        templateGroupEl.style.marginBottom = '24px';
+        templateGroupEl.style.boxShadow = '0 4px 20px rgba(0, 85, 255, 0.05)';
+        
+        const templateHeaderEl = document.createElement('div');
+        templateHeaderEl.style.display = 'flex';
+        templateHeaderEl.style.justifyContent = 'space-between';
+        templateHeaderEl.style.alignItems = 'center';
+        templateHeaderEl.style.marginBottom = '12px';
+        templateHeaderEl.style.flexWrap = 'wrap';
+        templateHeaderEl.style.gap = '8px';
+        
+        const templateTitleEl = document.createElement('h3');
+        templateTitleEl.className = 'rhyme-group-title';
+        templateTitleEl.style.color = 'var(--primary)';
+        templateTitleEl.style.fontSize = '1.05rem';
+        templateTitleEl.style.margin = '0';
+        templateTitleEl.style.textTransform = 'uppercase';
+        templateTitleEl.style.letterSpacing = '0.5px';
+        templateTitleEl.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Ndihmësi 4 Takte (Skema AABB)
+        `;
+        templateHeaderEl.appendChild(templateTitleEl);
+        
+        const templateActionsEl = document.createElement('div');
+        templateActionsEl.style.display = 'flex';
+        templateActionsEl.style.gap = '6px';
+        
+        // Shuffle A
+        const shuffleABtn = document.createElement('button');
+        shuffleABtn.className = 'btn btn-secondary btn-sm';
+        shuffleABtn.style.fontSize = '0.75rem';
+        shuffleABtn.style.padding = '4px 8px';
+        shuffleABtn.style.height = '28px';
+        shuffleABtn.innerHTML = 'Ndrysho Rimën A 🔄';
+        if (rhymeAPairs.length <= 1) {
+            shuffleABtn.setAttribute('disabled', 'true');
+            shuffleABtn.style.opacity = '0.5';
+            shuffleABtn.style.cursor = 'not-allowed';
+        }
+        shuffleABtn.addEventListener('click', () => {
+            if (rhymeAPairs.length > 1) {
+                let newIndex = selectedARhymeIndex;
+                // Randomize to a different index
+                do {
+                    newIndex = Math.floor(Math.random() * rhymeAPairs.length);
+                } while (newIndex === selectedARhymeIndex && rhymeAPairs.length > 1);
+                selectedARhymeIndex = newIndex;
+                filterAndRenderResults();
+                showToast('Rimë A e re u përzgjodh randomly! 🎲');
+            }
+        });
+        templateActionsEl.appendChild(shuffleABtn);
+        
+        // Shuffle B
+        const shuffleBBtn = document.createElement('button');
+        shuffleBBtn.className = 'btn btn-secondary btn-sm';
+        shuffleBBtn.style.fontSize = '0.75rem';
+        shuffleBBtn.style.padding = '4px 8px';
+        shuffleBBtn.style.height = '28px';
+        shuffleBBtn.innerHTML = 'Ndrysho Rimën B 🔄';
+        shuffleBBtn.addEventListener('click', () => {
+            selectedBRhymeIndex = (selectedBRhymeIndex + 1) % RAP_B_RHYMES.length;
+            filterAndRenderResults();
+            showToast('Rimë B e re u përzgjodh! 🔄');
+        });
+        templateActionsEl.appendChild(shuffleBBtn);
+        
+        // Send to Notepad
+        const sendBtn = document.createElement('button');
+        sendBtn.className = 'btn btn-secondary btn-sm';
+        sendBtn.style.fontSize = '0.75rem';
+        sendBtn.style.padding = '4px 8px';
+        sendBtn.style.height = '28px';
+        sendBtn.style.borderColor = 'rgba(0, 210, 255, 0.3)';
+        sendBtn.style.color = 'var(--primary)';
+        sendBtn.innerHTML = 'Dërgo në Notepad ✍️';
+        sendBtn.addEventListener('click', () => {
+            let currentText = lyricsTextarea.value;
+            if (currentText.trim()) {
+                currentText += '\n\n';
+            }
+            currentText += `____________________ ${rhymeA1}\n`;
+            currentText += `____________________ ${rhymeA2}\n`;
+            currentText += `____________________ ${rhymeB1}\n`;
+            currentText += `____________________ ${rhymeB2}`;
+            
+            lyricsTextarea.value = currentText;
+            updateLyricsStats();
+            saveLyrics();
+            lyricsTextarea.focus();
+            lyricsTextarea.scrollTop = lyricsTextarea.scrollHeight;
+            showToast('Struktura u dërgua te Notepad!');
+        });
+        templateActionsEl.appendChild(sendBtn);
+        
+        templateHeaderEl.appendChild(templateActionsEl);
+        templateGroupEl.appendChild(templateHeaderEl);
+        
+        // Render rows
+        const linesContainer = document.createElement('div');
+        linesContainer.style.display = 'flex';
+        linesContainer.style.flexDirection = 'column';
+        linesContainer.style.gap = '8px';
+        linesContainer.style.background = 'rgba(15, 23, 42, 0.4)';
+        linesContainer.style.padding = '12px';
+        linesContainer.style.borderRadius = '8px';
+        linesContainer.style.border = '1px solid rgba(255, 255, 255, 0.04)';
+        
+        const makeLineRow = (label, word, letter) => {
+            const row = document.createElement('div');
+            row.style.display = 'flex';
+            row.style.justifyContent = 'space-between';
+            row.style.alignItems = 'center';
+            row.style.fontSize = '0.9rem';
+            row.style.color = 'var(--text-muted)';
+            row.style.borderBottom = '1px dashed rgba(255, 255, 255, 0.04)';
+            row.style.paddingBottom = '6px';
+            
+            row.innerHTML = `
+                <span>
+                    <strong style="color: var(--text-dark); margin-right: 6px;">${label} (${letter}):</strong>
+                    <span style="letter-spacing: 2px; color: var(--text-dark); opacity: 0.6;">__________________</span>
+                </span>
+                <span class="word-text" style="color: var(--primary); font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; text-shadow: 0 0 5px rgba(0, 210, 255, 0.2);" title="Kliko për ta kopjuar">${word}</span>
+            `;
+            
+            if (word && word !== '...') {
+                row.querySelector('.word-text').addEventListener('click', () => copyWord(word));
+            }
+            return row;
+        };
+        
+        linesContainer.appendChild(makeLineRow('Takt 1', rhymeA1, 'A'));
+        linesContainer.appendChild(makeLineRow('Takt 2', rhymeA2, 'A'));
+        linesContainer.appendChild(makeLineRow('Takt 3', rhymeB1, 'B'));
+        linesContainer.appendChild(makeLineRow('Takt 4', rhymeB2, 'B'));
+        
+        templateGroupEl.appendChild(linesContainer);
+        resultsContainer.appendChild(templateGroupEl);
+    }
+
+
+
     // Get sorted keys of groups (e.g. "1 Rrokje", "2 Rrokje", etc.)
     const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
         const aNum = parseInt(a, 10);
         const bNum = parseInt(b, 10);
         return aNum - bNum;
     });
-    
+
     // Max words to render per group to keep page lightning fast
     const MAX_WORDS_PER_GROUP = 150;
-    
+
     // Render each group
     for (let key of sortedGroupKeys) {
         const items = groups[key];
         const groupEl = document.createElement('div');
         groupEl.className = 'rhyme-group';
-        
+
         const titleEl = document.createElement('h3');
         titleEl.className = 'rhyme-group-title';
-        
+
         let countText = items.length > MAX_WORDS_PER_GROUP ? `(Treguar ${MAX_WORDS_PER_GROUP} nga ${items.length})` : `(${items.length})`;
         titleEl.innerHTML = `${key} <span class="count">${countText}</span>`;
         groupEl.appendChild(titleEl);
-        
+
         const gridEl = document.createElement('div');
         gridEl.className = 'rhyme-grid';
-        
+
         // Render slice of items
         const renderedItems = items.slice(0, MAX_WORDS_PER_GROUP);
         for (let item of renderedItems) {
             const pill = document.createElement('div');
             pill.className = 'word-pill';
             pill.dataset.strength = item.strength;
-            
+
             // Tooltip or helper representation of strength
             let titleText = 'Asonance (Rregull Zanoresh)';
             if (item.strength === 'perfect') titleText = 'Rime e Plote (3 shkronjat e fundit)';
             if (item.strength === 'good') titleText = 'Rime e Mesme (2 shkronjat e fundit)';
             pill.title = titleText;
-            
+
             pill.innerHTML = `
                 <span class="word-text">${item.word}</span>
                 <span class="word-syllables">${item.syllables}</span>
             `;
-            
+
             pill.addEventListener('click', () => copyWord(item.word));
             gridEl.appendChild(pill);
         }
-        
+
         groupEl.appendChild(gridEl);
         resultsContainer.appendChild(groupEl);
     }
@@ -920,15 +1149,15 @@ function filterAndRenderResults() {
 // Get the grammatical stem of a word by recursively removing common Albanian suffixes
 function getWordStem(word) {
     let stem = word.toLowerCase();
-    
+
     // Albanian inflectional suffixes ordered by length descending
     const suffixes = [
-        'imeve', 'ëve', 'ave', 'nte', 'ime', 'imit', 'imin', 'imi', 
+        'imeve', 'ëve', 'ave', 'nte', 'ime', 'imit', 'imin', 'imi',
         'ët', 'at', 'ës', 'it', 'in', 'ën', 'ish', 'im',
         'va', 've', 'ra', 're', 'ta', 'te', 'os', 'on', 'es',
         'a', 'e', 'ë', 'i', 'o', 'u', 'y', 'j', 'm', 't', 'n', 'r', 's'
     ];
-    
+
     let stripped = true;
     while (stripped) {
         stripped = false;
@@ -948,35 +1177,35 @@ function getWordStem(word) {
 // Generate Gegërisht equivalents from standard words and inject Kosovar slang words
 function processAndInjectGeg(rawList) {
     const GEG_WORDS = [
-        'kerr', 'kerri', 'kerre', 'kerret', 'kerrin', 'kerrash', 'kerrve', 
-        'kurgjo', 'kurgjoja', 'sen', 'seni', 'sene', 'senet', 'senin', 'seneve', 
-        'loc', 'loci', 'loca', 'shac', 'shaci', 'shaca', 'shacave', 'shacet', 
-        'baba', 'babe', 'bir', 'biri', 'shoq', 'shoqi', 'dreq', 'dreqi', 'dreqet', 
-        'budall', 'budalla', 'budallet', 'koti', 'lshoj', 'lshojm', 'lshojn', 'lshu', 
-        'kallxoj', 'kallxojm', 'kallxojn', 'kallxu', 'ngoj', 'ngojm', 'ngojn', 'ngu', 
-        'shkoj', 'shkojm', 'shkojn', 'shku', 'bojm', 'bojn', 'boju', 'bo', 'thom', 'thojn', 
-        'tash', 'bash', 'spe', 'po', 'veq', 'shmek', 'shmeki', 'llaf', 'llafi', 'llafe', 'llafet', 
-        'zhurme', 'zhurma', 'pare', 'paret', 'para', 'leke', 'leket', 'tona', 'tonat', 'ton', 
-        'krejt', 'krejtve', 'shoki', 'shokit', 'shokt', 'vibe', 'vibe-i', 'vibe-at', 'hejt', 
-        'hejter', 'hejtera', 'hejterat', 'beat', 'beati', 'beat-i', 'flow', 'flow-i', 'rim', 
-        'rima', 'rimat', 'rap', 'rapi', 'rap-i', 'trap', 'trapi', 'trap-i', 'drill', 'drilli', 
-        'drill-i', 'hustle', 'hustleri', 'hustlerat', 'keq', 'keqi', 'keqt', 'fort', 'forti', 
-        'forte', 'smut', 'smuti', 'xhelozi', 'xheloz', 'xhelozat', 'fam', 'fama', 'fami', 'kesh', 
-        'keshi', 'kesh-i', 'para', 'lek', 'leki', 'plumba', 'plumbi', 'plumbat', 'naten', 'nata', 
-        'nates', 'diten', 'dita', 'dites', 'rruge', 'rruga', 'rruges', 'rrugt', 'rruget', 'asfallt', 
-        'asfallti', 'benz', 'benzi', 'audi', 'audi-i', 'bmw', 'bmw-ja', 'mercedes', 'mercedesi', 
-        'porshe', 'porsheja', 'ferrari', 'ferrari-i', 'lamborghini', 'lambo', 'lambo-ja', 
-        'shpejt', 'shpejti', 'gazin', 'gazi', 'frena', 'freni', 'ndalu', 'ndalo', 'vrap', 'vrapi', 
+        'kerr', 'kerri', 'kerre', 'kerret', 'kerrin', 'kerrash', 'kerrve',
+        'kurgjo', 'kurgjoja', 'sen', 'seni', 'sene', 'senet', 'senin', 'seneve',
+        'loc', 'loci', 'loca', 'shac', 'shaci', 'shaca', 'shacave', 'shacet',
+        'baba', 'babe', 'bir', 'biri', 'shoq', 'shoqi', 'dreq', 'dreqi', 'dreqet',
+        'budall', 'budalla', 'budallet', 'koti', 'lshoj', 'lshojm', 'lshojn', 'lshu',
+        'kallxoj', 'kallxojm', 'kallxojn', 'kallxu', 'ngoj', 'ngojm', 'ngojn', 'ngu',
+        'shkoj', 'shkojm', 'shkojn', 'shku', 'bojm', 'bojn', 'boju', 'bo', 'thom', 'thojn',
+        'tash', 'bash', 'spe', 'po', 'veq', 'shmek', 'shmeki', 'llaf', 'llafi', 'llafe', 'llafet',
+        'zhurme', 'zhurma', 'pare', 'paret', 'para', 'leke', 'leket', 'tona', 'tonat', 'ton',
+        'krejt', 'krejtve', 'shoki', 'shokit', 'shokt', 'vibe', 'vibe-i', 'vibe-at', 'hejt',
+        'hejter', 'hejtera', 'hejterat', 'beat', 'beati', 'beat-i', 'flow', 'flow-i', 'rim',
+        'rima', 'rimat', 'rap', 'rapi', 'rap-i', 'trap', 'trapi', 'trap-i', 'drill', 'drilli',
+        'drill-i', 'hustle', 'hustleri', 'hustlerat', 'keq', 'keqi', 'keqt', 'fort', 'forti',
+        'forte', 'smut', 'smuti', 'xhelozi', 'xheloz', 'xhelozat', 'fam', 'fama', 'fami', 'kesh',
+        'keshi', 'kesh-i', 'para', 'lek', 'leki', 'plumba', 'plumbi', 'plumbat', 'naten', 'nata',
+        'nates', 'diten', 'dita', 'dites', 'rruge', 'rruga', 'rruges', 'rrugt', 'rruget', 'asfallt',
+        'asfallti', 'benz', 'benzi', 'audi', 'audi-i', 'bmw', 'bmw-ja', 'mercedes', 'mercedesi',
+        'porshe', 'porsheja', 'ferrari', 'ferrari-i', 'lamborghini', 'lambo', 'lambo-ja',
+        'shpejt', 'shpejti', 'gazin', 'gazi', 'frena', 'freni', 'ndalu', 'ndalo', 'vrap', 'vrapi',
         'vrapu', 'ik', 'iki', 'iku', 'hajt', 'hajde', 'shuje', 'kqyr', 'kqyri', 'kqyrim', 'kqyru', 'kqyrt'
     ];
 
     const resultSet = new Set();
-    
+
     // Process raw list
     for (let word of rawList) {
         const w = word.toLowerCase();
         resultSet.add(w);
-        
+
         // standard verbs ending in "-uar" -> Gegërisht "-u"
         if (w.endsWith('uar') && w.length > 3) {
             resultSet.add(w.substring(0, w.length - 3) + 'u');
@@ -1011,7 +1240,7 @@ function processAndInjectGeg(rawList) {
     for (let word of GEG_WORDS) {
         resultSet.add(word.toLowerCase());
     }
-    
+
     return Array.from(resultSet).sort();
 }
 
